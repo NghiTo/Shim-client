@@ -1,17 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./features/Home/Home";
-import Layout from "./layouts/Layout";
+import Home from "./pages/Home/Home";
+import ErrorFallBack from "./pages/Error/ErrorFallBack";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-    ],
+    element: <Home />,
+    errorElement: <ErrorFallBack/>
   },
 ]);
 

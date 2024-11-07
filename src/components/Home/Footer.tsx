@@ -2,15 +2,15 @@ const Footer = () => {
   return (
     <>
       <div className="mx-16 py-12 md:grid md:grid-cols-4 flex flex-col max-md:mx-6 border-b border-gray-300">
-        <div className="w-1/2 h-full max-md:w-1/2 flex flex-col">
+        <div className="w-1/2 h-full max-md:w-1/3 flex flex-col max-md:gap-8 mb-12">
           <img
-            src="/public/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
+            src="/src/assets/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
             alt="Logo"
             className="h-auto w-full object-cover"
           />
           <div className="w-full flex flex-row mt-auto items-center">
             <img
-              src="/public/64a3c543f0df3bde4580f844_Accessibility_Icon.webp"
+              src="/src/assets/64a3c543f0df3bde4580f844_Accessibility_Icon.webp"
               alt="Accessibility"
             />
             <p className="text-[#2475af] font-medium">
@@ -39,15 +39,15 @@ const Footer = () => {
           <p>Careers</p>
           <p>About Us</p>
         </div>
-        <div className="flex flex-col gap-4 w-2/3">
-          <img src="/public/62fa641a161d3a2982681d00_Google Play.svg" alt="" />
+        <div className="flex flex-col gap-4 w-2/3 max-md:mt-12">
+          <img src="/src/assets/62fa641a161d3a2982681d00_Google Play.svg" alt="Google play" />
           <img
-            src="/public/62fa6419161d3a1ad0681cbf_App Store.svg"
-            alt="Store"
+            src="/src/assets/62fa6419161d3a1ad0681cbf_App Store.svg"
+            alt="App store"
           />
         </div>
       </div>
-      <div className="px-16 py-6 flex flex-row">
+      <div className="px-16 py-6 flex flex-row max-md:hidden">
         <div className="w-1/2 text-gray-500">
           <p>1. 2021 survey of 800+ teachers conducted by Shimnek</p>
           <p>2. Journal of Education and e-Learning Research (Source)</p>
@@ -58,16 +58,16 @@ const Footer = () => {
         <div className="w-1/2 flex flex-col items-end gap-4">
           <div className="flex flex-row gap-12">
             <img
-              src="/public/62fa6419161d3a49b9681ca7_Twitter Icon.svg"
+              src="/src/assets/62fa6419161d3a49b9681ca7_Twitter Icon.svg"
               alt="Twitter"
             />
             <img
-              src="/public/62fa6419161d3a2ade681ca6_Facebook Icon.svg"
-              alt="Twitter"
+              src="/src/assets/62fa6419161d3a2ade681ca6_Facebook Icon.svg"
+              alt="Facebook"
             />
             <img
-              src="/public/62fa6419161d3a69fc681c8d_Instagram Icon.svg"
-              alt="Twitter"
+              src="/src/assets/62fa6419161d3a69fc681c8d_Instagram Icon.svg"
+              alt="Instagram"
             />
           </div>
           <p>2024 Shimnek Inc.</p>

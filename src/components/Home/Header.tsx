@@ -1,5 +1,5 @@
 import { Drawer, DrawerProps, Dropdown } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -7,13 +7,30 @@ import { Link } from "react-router-dom";
 const Header = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [placement] = useState<DrawerProps["placement"]>("top");
+  const [shadow, setShadow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShadow(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <div className="flex flex-row px-5 py-4 text-lg">
+    <div
+      className={`flex flex-row px-5 py-4 text-lg bg-white sticky top-0 z-20 transition-shadow ${
+        shadow ? "shadow-md" : ""
+      }`}
+    >
       <div className="flex flex-row items-center gap-6">
         <div className="w-1/6 h-full max-md:w-1/2 flex items-center">
           <img
-            src="/public/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
+            src="/src/assets/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
             alt="Logo"
             className="h-auto w-full object-cover"
           />
@@ -84,7 +101,7 @@ const Header = () => {
       <Drawer
         title={
           <img
-            src="/public/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
+            src="/src/assets/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
             alt="Logo"
             className="w-1/5 ml-4 h-auto object-cover scale-150"
           />
