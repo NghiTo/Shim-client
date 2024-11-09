@@ -23,19 +23,19 @@ const Header = () => {
 
   return (
     <div
-      className={`flex flex-row px-5 py-4 text-lg bg-white sticky top-0 z-20 transition-shadow ${
+      className={`flex flex-row px-5 py-4 text-base bg-white sticky top-0 z-20 transition-shadow ${
         shadow ? "shadow-md" : ""
       }`}
     >
-      <div className="flex flex-row items-center gap-6">
-        <div className="w-1/6 h-full max-md:w-1/2 flex items-center">
+      <div className="flex flex-row items-center gap-4 w-1/2">
+        <div className="w-1/5 h-full max-md:w-1/2 flex items-center">
           <img
             src="/src/assets/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
             alt="Logo"
             className="h-auto w-full object-cover"
           />
         </div>
-        <div className="flex flex-row gap-3 max-md:hidden">
+        <div className="flex flex-row max-md:hidden w-full">
           <Link
             to={""}
             className="rounded-lg px-4 py-2 whitespace-nowrap bg-white hover:bg-[#f6f0ff] transition-all ease-in-out"
@@ -68,7 +68,7 @@ const Header = () => {
           </Link>
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row items-center gap-4 w-1/2 justify-end">
         <Link
           to={""}
           className="max-md:hidden rounded-lg px-4 py-2 whitespace-nowrap border-2 text-[#fe5f5c] border-[#f6f0ff] hover:bg-[#f6f0ff] transition-all ease-in-out"
@@ -88,7 +88,7 @@ const Header = () => {
           Log in
         </Link>
         <Link
-          to={""}
+          to={"/signup"}
           className="max-md:hidden rounded-lg bg-[#fe5f5c] px-4 text-white py-2 whitespace-nowrap hover:bg-[#f8a09f] transition-all ease-in-out"
         >
           Sign up
@@ -154,7 +154,7 @@ const Header = () => {
             Log in
           </Link>
           <Link
-            to={""}
+            to={"/signup"}
             className="rounded-lg text-center bg-[#fe5f5c] px-4 w-full text-white py-2 whitespace-nowrap hover:text-white transition-all ease-in-out"
           >
             Sign up

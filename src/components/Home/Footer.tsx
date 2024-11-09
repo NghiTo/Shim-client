@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <>
@@ -19,7 +21,9 @@ const Footer = () => {
           </div>
         </div>
         <div className="font-normal text-xl flex flex-col gap-8">
-          <p>The Shim Blog</p>
+          <Link to={""} className="hover:text-[#fe5f5c] transition-all duration-100 ease-in">
+            The Shim Blog
+          </Link>
           <p>Teacher Resources</p>
           <p>State Test Prep</p>
           <p>Shim for Work</p>
@@ -40,7 +44,10 @@ const Footer = () => {
           <p>About Us</p>
         </div>
         <div className="flex flex-col gap-4 w-2/3 max-md:mt-12">
-          <img src="/src/assets/62fa641a161d3a2982681d00_Google Play.svg" alt="Google play" />
+          <img
+            src="/src/assets/62fa641a161d3a2982681d00_Google Play.svg"
+            alt="Google play"
+          />
           <img
             src="/src/assets/62fa6419161d3a1ad0681cbf_App Store.svg"
             alt="App store"
@@ -49,7 +56,7 @@ const Footer = () => {
       </div>
       <div className="px-16 py-6 flex flex-row max-md:hidden">
         <div className="w-1/2 text-gray-500">
-          <p>1. 2021 survey of 800+ teachers conducted by Shimnek</p>
+          <p>1. 2024 survey of 800+ teachers conducted by Shimnek</p>
           <p>2. Journal of Education and e-Learning Research (Source)</p>
           <p>
             3. International Online Journal of Education and Teaching (Source)
