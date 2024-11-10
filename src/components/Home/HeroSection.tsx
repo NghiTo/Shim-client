@@ -13,7 +13,7 @@ const HeroSection = () => {
           Introducing <b className="text-[#fe5f5c]">Shim course</b>
         </p>
         <p className="text-6xl font-bold md:w-1/2 max-md:text-4xl">
-          I had no idea Shim could do that.
+          "I had no idea Shim could do that."
         </p>
         <p className="text-2xl pb-6 text-[#666666] max-md:text-lg">
           - Almost everybody

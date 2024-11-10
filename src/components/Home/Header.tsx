@@ -82,7 +82,7 @@ const Header = () => {
           Enter code
         </Link>
         <Link
-          to={""}
+          to={"/login"}
           className="max-md:hidden rounded-lg bg-[#f6f0ff] hover:bg-[#ece0fd] text-[#ca8787] px-4 py-2 whitespace-nowrap transition-all ease-in-out"
         >
           Log in

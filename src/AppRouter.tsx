@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import Loading from "./components/Loading/Loading";
 import NotFound from "./pages/Error/NotFound";
 import Register from "./pages/Register/Register";
+import Login from "./pages/Login/Login";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Register />,
+    errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
     errorElement: <ErrorFallBack />,
   },
   {
