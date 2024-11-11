@@ -1,13 +1,8 @@
-import { Link } from "react-router-dom";
-import backgroundImg from "/src/assets/header_96c74815-3497-4ccf-bf3c-3dfdfa17e313.webp";
-import MainSignUp from "../../components/Register/MainSignUp";
-import { useState } from "react";
-import ContinueEmail from "../../components/Register/ContinueEmail";
+import { Link, Outlet } from "react-router-dom";
 
 const Register = () => {
-  const [continueEmail, setContinueEmail] = useState(false);
   return (
-    <div className="min-h-screen flex flex-col gap-5">
+    <div className="min-h-screen flex flex-col gap-5 mb-8">
       <div className="py-4 px-4 flex flex-row items-center">
         <Link to={"/"} className="w-1/12 max-md:w-1/4">
           <img
@@ -31,18 +26,7 @@ const Register = () => {
           </Link>
         </div>
       </div>
-      <div className="bg-gray-100 max-md:bg-white w-2/3 min-h-full mx-auto rounded-lg flex flex-row gap-4 max-md:w-full">
-        {continueEmail ? (
-          <ContinueEmail setContinueEmail={setContinueEmail} />
-        ) : (
-          <MainSignUp setContinueEmail={setContinueEmail} />
-        )}
-
-        <div
-          className="w-2/5 h-auto rounded-r-lg bg-cover bg-center max-md:hidden"
-          style={{ backgroundImage: `url(${backgroundImg})` }}
-        ></div>
-      </div>
+      <Outlet />
     </div>
   );
 };

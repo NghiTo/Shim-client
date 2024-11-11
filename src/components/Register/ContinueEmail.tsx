@@ -7,12 +7,16 @@ import { emailSchema } from "../../schemas/userSchema";
 import { useMutation } from "react-query";
 import { findUserByEmail } from "../../apis/user.api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 interface ContinueEmailProps {
   setContinueEmail: (value: boolean) => void;
 }
 
 const ContinueEmail: React.FC<ContinueEmailProps> = ({ setContinueEmail }) => {
+  const navigate = useNavigate();
+
   const {
     register,
     clearErrors,
@@ -31,6 +35,18 @@ const ContinueEmail: React.FC<ContinueEmailProps> = ({ setContinueEmail }) => {
         autoClose: 3000,
         pauseOnHover: false,
       });
+    },
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 404) {
+        const email = watch("email");
+        localStorage.setItem("email", email);
+        navigate("/signup/occupation");
+      } else {
+        toast.error("An error occurred while checking the email address", {
+          autoClose: 3000,
+          pauseOnHover: false,
+        });
+      }
     },
   });
 
