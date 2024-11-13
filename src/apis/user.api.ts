@@ -1,3 +1,4 @@
+import { User } from "../interfaces/user.interface";
 import { LoginForm, RegisterForm } from "../types/register.type";
 import axiosInstance from "../utils/http";
 
@@ -18,10 +19,10 @@ export const login = async (data: LoginForm) => {
 
 export const findUserById = async (id: string) => {
   const res = await axiosInstance.get(`/users/${id}`);
-  return res.data;
+  return res.data.data;
 };
 
-export const updateUser = async (id: string, data: { schoolId: string }) => {
+export const updateUser = async (id: string, data: User) => {
   const res = await axiosInstance.put(`/users/${id}`, data);
   return res.data;
 };

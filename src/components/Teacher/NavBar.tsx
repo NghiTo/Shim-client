@@ -23,7 +23,7 @@ const NavBar: React.FC<NavBarProps> = ({ setSelectedKeys }) => {
 
   const handleLogout = () => {
     dispatch(clearUser());
-    localStorage.removeItem("token");
+    localStorage.clear();
     setPopoverVisible(false);
   };
 
@@ -45,13 +45,13 @@ const NavBar: React.FC<NavBarProps> = ({ setSelectedKeys }) => {
         placement="bottomRight"
         title={"NghiTo"}
         trigger="click"
-        visible={popoverVisible}
-        onVisibleChange={setPopoverVisible}
+        open={popoverVisible}
+        onOpenChange={setPopoverVisible}
         content={
           <div className="flex flex-col gap-2">
             <Link
               to={`/teacher/profile/${user.id}`}
-              className="flex flex-row items-center gap-2"
+              className="flex flex-row items-center gap-2 hover:text-[#fe5f5c]"
               onClick={() => {
                 closePopover();
                 setSelectedKeys([]);
@@ -82,7 +82,7 @@ const NavBar: React.FC<NavBarProps> = ({ setSelectedKeys }) => {
                 handleLogout();
                 closePopover();
               }}
-              className="flex flex-row items-center gap-2"
+              className="flex flex-row items-center gap-2 hover:text-[#fe5f5c]"
             >
               <MdLogout />
               <p>Logout</p>
@@ -91,9 +91,9 @@ const NavBar: React.FC<NavBarProps> = ({ setSelectedKeys }) => {
         }
       >
         <img
-          src={defaultImg}
+          src={(user.avatarUrl as string) || defaultImg}
           alt="avatar"
-          className="w-auto h-11 border-2 border-gray-100 hover:border-gray-400 transition-all duration-100 ease-in-out cursor-pointer rounded-full "
+          className="w-auto h-11 border-2 aspect-square object-cover border-gray-100 hover:border-gray-400 transition-all duration-100 ease-in-out cursor-pointer rounded-full "
           onClick={() => setPopoverVisible(!popoverVisible)}
         />
       </Popover>

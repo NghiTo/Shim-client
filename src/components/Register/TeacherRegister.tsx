@@ -31,6 +31,7 @@ const TeacherRegister = () => {
         setUser({
           id: res.data.id,
           schoolId: res.data.schoolId,
+          avatarUrl: res.data.avatarUrl
         })
       );
       localStorage.removeItem("email");

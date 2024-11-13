@@ -28,11 +28,10 @@
 }
 
 .ant-btn-variant-solid:hover {
-  background-color: #fc8785 !important
+  background-color: #fc8785 !important;
 }
 
-.ant-btn-variant-outlined:hover,
-.ant-select-selector {
+.ant-btn-variant-outlined:hover {
   border: 1px solid #fe5f5c !important;
   color: #fe5f5c !important;
 }

@@ -38,6 +38,7 @@ const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
         setUser({
           id: res.data.id,
           schoolId: res.data.schoolId,
+          avatarUrl: res.data.avatarUrl
         })
       );
       navigate("/teacher");

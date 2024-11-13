@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import ChooseSchool from "../../components/Teacher/ChooseSchool";
 
 const Teacher = () => {
-  
-
   const [selectedKeys, setSelectedKeys] = useState<string[]>(() => {
     const savedKeys = localStorage.getItem("selectedKeys");
     return savedKeys ? JSON.parse(savedKeys) : ["1"];
