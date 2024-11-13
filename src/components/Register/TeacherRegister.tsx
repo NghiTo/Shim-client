@@ -29,15 +29,12 @@ const TeacherRegister = () => {
     onSuccess: (res) => {
       dispatch(
         setUser({
-          title: res.data.title,
-          email: res.data.email,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          role: res.data.role,
+          id: res.data.id,
+          schoolId: res.data.schoolId,
         })
       );
       localStorage.removeItem("email");
-      navigate("/admin");
+      navigate("/teacher");
     },
   });
 
@@ -53,7 +50,7 @@ const TeacherRegister = () => {
   const isFormFilled = title && firstName && lastName && password;
 
   return (
-    <div className="bg-gray-100 max-md:bg-white w-1/3 min-h-full mx-auto rounded-lg flex flex-col gap-8 max-md:w-full px-8 py-8">
+    <div className="bg-gray-100 w-1/3 min-h-full mx-auto rounded-lg flex flex-col gap-8 max-md:w-full p-8">
       <div className="flex flex-col text-center gap-2">
         <h1 className="text-center text-2xl font-semibold">
           Provide your account details

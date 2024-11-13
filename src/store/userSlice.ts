@@ -1,30 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserState } from "../interfaces/user.interface";
+import { User } from "../interfaces/user.interface";
 
-const initialState: UserState = {
-  email: null,
-  title: null,
-  firstName: null,
-  lastName: null,
-  role: null,
+const initialState: User = {
+  id: null,
+  schoolId: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<UserState>) {
-      state.email = action.payload.email;
-      state.title = action.payload.title;
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
-      state.role = action.payload.role;
+    setUser(state, action: PayloadAction<User>) {
+      state.id = action.payload.id;
+      state.schoolId= action.payload.schoolId;
     },
     clearUser(state) {
-      state.email = null;
-      state.firstName = null;
-      state.lastName = null;
-      state.role = null;
+      state.id = null;
+      state.schoolId = null;
     },
   },
 });

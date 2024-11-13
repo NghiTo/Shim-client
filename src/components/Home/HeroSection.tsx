@@ -24,7 +24,11 @@ const HeroSection = () => {
         </p>
       </div>
       <div className="flex flex-row max-md:flex-col justify-start gap-4">
-        <Link to={""} className="relative z-0">
+        <Link
+          to={"/signup"}
+          onClick={() => window.scrollTo(0, 0)}
+          className="relative z-0"
+        >
           <div className="translate-y-0 hover:translate-y-2 transition-all duration-300 bg-[#fe5f5c] rounded-md py-2 px-4 flex flex-col items-start w-48 max-md:w-full">
             <p className="uppercase font-medium text-[#fcc7c6]">Teachers</p>
             <div className="flex flex-row items-center text-white">

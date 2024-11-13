@@ -1,7 +1,11 @@
-export interface UserState {
-  email: string | null;
-  title: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  role: string | null;
+export interface User {
+  id?: string | null
+  email?: string | null;
+  title?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  role?: string | null;
+  schoolId?: string | null;
+  subject?: string | null;
+  grade?: string | null;
 }

@@ -12,3 +12,27 @@
 .ant-select-selector {
   border: 1px solid gray !important;
 }
+
+.ant-menu-item-selected {
+  color: #fe5f5c !important;
+  background-color: rgb(238, 237, 237) !important;
+}
+
+.ant-menu-submenu-title {
+  color: black !important;
+}
+
+.ant-btn-variant-solid {
+  background-color: #fe5f5c !important;
+  color: white !important;
+}
+
+.ant-btn-variant-solid:hover {
+  background-color: #fc8785 !important
+}
+
+.ant-btn-variant-outlined:hover,
+.ant-select-selector {
+  border: 1px solid #fe5f5c !important;
+  color: #fe5f5c !important;
+}

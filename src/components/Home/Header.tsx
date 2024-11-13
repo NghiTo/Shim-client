@@ -89,7 +89,7 @@ const Header = () => {
         </Link>
         <Link
           to={"/signup"}
-          className="max-md:hidden rounded-lg bg-[#fe5f5c] px-4 text-white py-2 whitespace-nowrap hover:bg-[#f8a09f] transition-all ease-in-out"
+          className="max-md:hidden rounded-lg bg-[#fe5f5c] px-4 text-white py-2 whitespace-nowrap hover:bg-[#fc8785] transition-all ease-in-out"
         >
           Sign up
         </Link>
@@ -148,7 +148,7 @@ const Header = () => {
             Get a quote
           </Link>
           <Link
-            to={""}
+            to={"/login"}
             className="rounded-lg text-center bg-[#f6f0ff] hover:text-[#fe5f5c] text-[#fe5f5c] px-4 py-2 whitespace-nowrap transition-all ease-in-out"
           >
             Log in

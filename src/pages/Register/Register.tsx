@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 const Register = () => {
   return (
-    <div className="min-h-screen flex flex-col gap-5 mb-8">
+    <div className="flex flex-col gap-3 mb-8">
       <div className="py-4 px-4 flex flex-row items-center">
         <Link to={"/"} className="w-1/12 max-md:w-1/4">
           <img

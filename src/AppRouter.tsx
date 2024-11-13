@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter } from "react-router-dom";
 import ErrorFallBack from "./pages/Error/ErrorFallBack";
 import { lazy, Suspense } from "react";
@@ -8,10 +9,10 @@ import Login from "./pages/Login/Login";
 import RegisterBody from "./components/Register/RegisterBody";
 import Occupation from "./components/Register/Occupation";
 import TeacherRegister from "./components/Register/TeacherRegister";
-import Teacher from "./pages/Teacher/Teacher";
+import Profile from "./components/Teacher/Profile";
 
-// eslint-disable-next-line react-refresh/only-export-components
 const Home = lazy(() => import("./pages/Home/Home"));
+const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
 
 const router = createBrowserRouter([
   {
@@ -48,13 +49,19 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallBack />,
   },
   {
-    path: "/admin",
+    path: "/teacher",
     element: (
       <Suspense fallback={<Loading />}>
         <Teacher />
       </Suspense>
     ),
     errorElement: <ErrorFallBack />,
+    children: [
+      {
+        path: "/teacher/profile/:profileId",
+        element: <Profile />,
+      },
+    ],
   },
   {
     path: "*",
