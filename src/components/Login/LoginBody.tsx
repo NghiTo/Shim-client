@@ -2,7 +2,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaArrowLeft, FaRegEnvelope } from "react-icons/fa6";
 import { GoLock } from "react-icons/go";
-import { LoginForm } from "../../types/register.type";
+import { LoginForm } from "../../types/user.type";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../schemas/userSchema";
 import { useMutation } from "react-query";

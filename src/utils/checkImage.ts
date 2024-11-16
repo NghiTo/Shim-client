@@ -37,7 +37,7 @@ export const checkImage = (file: File, type: string): boolean => {
 
 export const readAsBase64 = (
   file: File
-): Promise<string | ArrayBuffer | null> => {
+): Promise<string | ArrayBuffer> => {
   const reader: FileReader = new FileReader();
   const fileValue: Promise<string | ArrayBuffer | null> = new Promise(
     (resolve, reject) => {

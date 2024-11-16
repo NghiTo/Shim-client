@@ -19,7 +19,7 @@ const Teacher = () => {
       <ChooseSchool />
       <SideBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />
       <div className="flex flex-col w-full">
-        <NavBar setSelectedKeys={setSelectedKeys} />
+        <NavBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />
         <Outlet />
       </div>
     </div>

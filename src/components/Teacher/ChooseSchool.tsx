@@ -1,18 +1,19 @@
 import { Modal } from "antd";
 import { IoSearch } from "react-icons/io5";
-import { useInfiniteQuery, useMutation } from "react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { getSchools } from "../../apis/school.api";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { School } from "../../interfaces/school.interface";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { updateUser } from "../../apis/user.api";
 import { setUser } from "../../store/userSlice";
+import { School } from "../../types/school.type";
 
 const ChooseSchool = () => {
   const user = useSelector((state: RootState) => state.user);
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,8 +30,13 @@ const ChooseSchool = () => {
     }
   );
 
-  const { mutate } = useMutation((schoolId: string) =>
-    updateUser(user.id as string, { schoolId })
+  const { mutate } = useMutation(
+    (schoolId: string) => updateUser(user.id as string, { schoolId }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userInfo");
+      },
+    }
   );
 
   const handleSave = () => {

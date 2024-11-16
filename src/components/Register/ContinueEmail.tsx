@@ -1,7 +1,7 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaArrowLeft, FaRegEnvelope } from "react-icons/fa6";
-import { EmailForm } from "../../types/register.type";
+import { EmailForm } from "../../types/user.type";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { emailSchema } from "../../schemas/userSchema";
 import { useMutation } from "react-query";
@@ -31,10 +31,7 @@ const ContinueEmail: React.FC<ContinueEmailProps> = ({ setContinueEmail }) => {
 
   const { mutate } = useMutation(findUserByEmail, {
     onSuccess: () => {
-      toast.error("This email address is already registered. Please log in", {
-        autoClose: 3000,
-        pauseOnHover: false,
-      });
+      toast.error("This email address is already registered. Please log in");
     },
     onError: (error: AxiosError) => {
       if (error.response?.status === 404) {
@@ -42,10 +39,7 @@ const ContinueEmail: React.FC<ContinueEmailProps> = ({ setContinueEmail }) => {
         localStorage.setItem("email", email);
         navigate("/signup/occupation");
       } else {
-        toast.error("An error occurred while checking the email address", {
-          autoClose: 3000,
-          pauseOnHover: false,
-        });
+        toast.error("An error occurred while checking the email address");
       }
     },
   });

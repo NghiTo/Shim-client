@@ -1,5 +1,4 @@
-import { User } from "../interfaces/user.interface";
-import { LoginForm, RegisterForm } from "../types/register.type";
+import { LoginForm, UserRegister, UserUpdate } from "../types/user.type";
 import axiosInstance from "../utils/http";
 
 export const findUserByEmail = async (email: string) => {
@@ -7,7 +6,7 @@ export const findUserByEmail = async (email: string) => {
   return res.data;
 };
 
-export const createUser = async (data: RegisterForm) => {
+export const createUser = async (data: UserRegister) => {
   const res = await axiosInstance.post("/users/register", data);
   return res.data;
 };
@@ -22,7 +21,7 @@ export const findUserById = async (id: string) => {
   return res.data.data;
 };
 
-export const updateUser = async (id: string, data: User) => {
+export const updateUser = async (id: string, data: UserUpdate) => {
   const res = await axiosInstance.put(`/users/${id}`, data);
   return res.data;
 };

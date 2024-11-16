@@ -9,7 +9,7 @@ import Login from "./pages/Login/Login";
 import RegisterBody from "./components/Register/RegisterBody";
 import Occupation from "./components/Register/Occupation";
 import TeacherRegister from "./components/Register/TeacherRegister";
-import Profile from "./components/Teacher/Profile";
+import Profile from "./components/Teacher/Profile/Profile";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));

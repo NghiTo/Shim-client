@@ -35,3 +35,7 @@
   border: 1px solid #fe5f5c !important;
   color: #fe5f5c !important;
 }
+
+.ant-drawer-body {
+  padding: 0 !important;
+}

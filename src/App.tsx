@@ -15,7 +15,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        pauseOnHover={false}
+      />
     </QueryClientProvider>
   );
 }
