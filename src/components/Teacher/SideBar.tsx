@@ -68,7 +68,7 @@ const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         alt="Logo"
         className="object-cover w-2/5 flex mx-auto mb-3"
       />
-      <button className="bg-[#fe5f5c] mx-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#f8a09f]">
+      <button className="bg-[#fe5f5c] mx-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#fc8785] transition-all ease-in-out">
         <FaPlus className="text-xs" />
         <p>Create</p>
       </button>

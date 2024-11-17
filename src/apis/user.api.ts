@@ -1,4 +1,9 @@
-import { LoginForm, UserRegister, UserUpdate } from "../types/user.type";
+import {
+  LoginForm,
+  UserPassword,
+  UserRegister,
+  UserUpdate,
+} from "../types/user.type";
 import axiosInstance from "../utils/http";
 
 export const findUserByEmail = async (email: string) => {
@@ -23,5 +28,10 @@ export const findUserById = async (id: string) => {
 
 export const updateUser = async (id: string, data: UserUpdate) => {
   const res = await axiosInstance.put(`/users/${id}`, data);
+  return res.data;
+};
+
+export const changePassword = async (id: string, data: UserPassword) => {
+  const res = await axiosInstance.put(`/users/changePassword/${id}`, data);
   return res.data;
 };

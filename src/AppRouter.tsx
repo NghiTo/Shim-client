@@ -10,6 +10,7 @@ import RegisterBody from "./components/Register/RegisterBody";
 import Occupation from "./components/Register/Occupation";
 import TeacherRegister from "./components/Register/TeacherRegister";
 import Profile from "./components/Teacher/Profile/Profile";
+import Setting from "./components/Teacher/Setting/Setting";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/teacher/profile/:profileId",
         element: <Profile />,
+      },
+      {
+        path: "/teacher/settings",
+        element: <Setting />,
       },
     ],
   },

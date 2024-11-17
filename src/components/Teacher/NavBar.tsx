@@ -81,8 +81,10 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
 
   const handleMenuClick = (key: string) => {
     setSelectedKeys([key]);
-    if (key === "1") {
-      navigate("/teacher");
+    switch (key) {
+      case "1":
+        navigate("/teacher");
+        break;
     }
   };
 
@@ -125,7 +127,10 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         </button>
         <Menu
           selectedKeys={selectedKeys}
-          onSelect={({ key }) => handleMenuClick(key)}
+          onSelect={({ key }) => {
+            handleMenuClick(key);
+            setOpen(false);
+          }}
           mode="inline"
           theme="light"
           items={items}
@@ -160,16 +165,19 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
               <p>View profile</p>
             </Link>
             <Link
-              to={""}
-              className="flex flex-row items-center gap-2"
-              onClick={closePopover}
+              to={"/teacher/settings"}
+              className="flex flex-row items-center gap-2 hover:text-[#fe5f5c]"
+              onClick={() => {
+                closePopover();
+                setSelectedKeys([]);
+              }}
             >
               <LuSettings />
               <p>Settings</p>
             </Link>
             <Link
               to={""}
-              className="flex flex-row items-center gap-2"
+              className="flex flex-row items-center gap-2 hover:text-[#fe5f5c]"
               onClick={closePopover}
             >
               <AiOutlinePicture />

@@ -61,4 +61,15 @@ export type UserProfile = {
   lastName: string;
   grade: string;
   subject: string;
+};
+
+export type PasswordForm = {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
+export type UserPassword = {
+  oldPassword: string;
+  newPassword: string;
 }

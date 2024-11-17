@@ -33,7 +33,6 @@ const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
 
   const { mutate } = useMutation(login, {
     onSuccess: (res) => {
-      localStorage.setItem("token", res.accessToken);
       dispatch(
         setUser({
           id: res.data.id,

@@ -1,8 +1,11 @@
-import axios from "axios";
+import axiosInstance from "../utils/http";
 
 export const getNewAccessToken = async () => {
-  const response = await axios.get("http://localhost:3000/api/auth/refreshToken", {
-    withCredentials: true,
-  });
+  const response = await axiosInstance.get("/auth/refreshToken");
   return response;
+};
+
+export const sendOtp = async () => {
+  const res = await axiosInstance.get("/auth/sendOtp");
+  return res;
 };

@@ -36,3 +36,23 @@ export const updateSchema = Yup.object().shape({
   grade: Yup.string().required("Grade is required"),
   subject: Yup.string().required("Subject is required"),
 });
+
+export const passwordSchema = Yup.object().shape({
+  oldPassword: Yup.string()
+    .required("Please enter your current password")
+    .min(6, "Password must have at least 6 characters!"),
+  newPassword: Yup.string()
+    .required("Please enter a new password!")
+    .min(6, "Password must have at least 6 characters!")
+    .test(
+      "not-same-as-old-password",
+      "New password cannot be the same as the old password",
+      function (value) {
+        const { oldPassword } = this.parent;
+        return value !== oldPassword;
+      }
+    ),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Password must match")
+    .required("Please confirm your new password"),
+});

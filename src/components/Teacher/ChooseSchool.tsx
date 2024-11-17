@@ -27,6 +27,7 @@ const ChooseSchool = () => {
           ? lastPage.pagination.currentPage + 1
           : false;
       },
+      enabled: !user.schoolId
     }
   );
 
