@@ -1,7 +1,10 @@
+import { useDispatch } from "react-redux";
 import { Link, useRouteError, isRouteErrorResponse } from "react-router-dom";
+import { clearUser } from "../../store/userSlice";
 
 const ErrorFallback = () => {
   const error = useRouteError();
+  const dispatch = useDispatch();
 
   const errorMessage = isRouteErrorResponse(error)
     ? error.statusText
@@ -19,6 +22,10 @@ const ErrorFallback = () => {
         </p>
         <Link
           to="/"
+          onClick={() => {
+            localStorage.clear();
+            dispatch(clearUser());
+          }}
           className="inline-block bg-red-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-600 transition-colors duration-200"
         >
           Back to Home

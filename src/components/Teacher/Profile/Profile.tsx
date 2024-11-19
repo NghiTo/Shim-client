@@ -13,6 +13,7 @@ import { AxiosError } from "axios";
 import { FaUserEdit } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import { UserResponse } from "../../../types/user.type";
+import { Skeleton } from "antd";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const Profile = () => {
         toast.error(errorMessage || "Something went wrong");
       },
       onSuccess: (res) => {
-        queryClient.invalidateQueries("userInfo")
+        queryClient.invalidateQueries("userInfo");
         dispatch(setUser({ ...user, avatarUrl: res.data.avatarUrl }));
       },
     }
@@ -66,14 +67,6 @@ const Profile = () => {
       }
     }
   };
-
-  if (dataLoading) {
-    return (
-      <div className="bg-gray-100 p-8 h-full flex justify-center items-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -92,11 +85,20 @@ const Profile = () => {
           onClick={handleImageClick}
           className="w-1/6 cursor-pointer group relative max-md:hidden"
         >
-          <img
-            src={(res?.avatarUrl as string) || defaultImg}
-            alt="ava"
-            className="w-full h-auto aspect-square rounded-full object-cover"
-          />
+          {dataLoading ? (
+            <Skeleton.Avatar
+              active
+              size="large"
+              shape="circle"
+              style={{ width: 140, height: 140 }}
+            />
+          ) : (
+            <img
+              src={(res?.avatarUrl as string) || defaultImg}
+              alt="ava"
+              className="w-full h-auto aspect-square rounded-full object-cover"
+            />
+          )}
           <div className="absolute rounded-full inset-0 bg-black opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
           {isLoading && (
             <div className="rounded-full absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -118,21 +120,30 @@ const Profile = () => {
               alt="ava"
               className="w-1/6 h-auto aspect-square rounded-full object-cover md:hidden"
             />
-            <div className="flex flex-row gap-2 items-center max-md:flex-col max-md:items-start">
-              <h1 className="text-lg max-md:text-base font-semibold text-[#424242]">
-                {res?.title + ". " + res?.firstName + " " + res?.lastName}
-              </h1>
-              <p className="uppercase text-sm max-md:text-xs py-1 px-2 text-white bg-[#fe5f5c] rounded-full whitespace-nowrap text-center">
-                {res?.role}
-              </p>
-            </div>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="ml-auto font-medium border border-gray-300 py-1 rounded-md flex flex-row gap-1 items-center px-2 hover:bg-gray-200 transition-all ease-in-out duration-100"
-            >
-              <FaUserEdit />
-              <p className="max-md:hidden">Edit profile</p>
-            </button>
+            {dataLoading ? (
+              <Skeleton active paragraph={{ rows: 0 }} />
+            ) : (
+              <div className="flex flex-row gap-2 items-center max-md:flex-col max-md:items-start">
+                <h1 className="text-lg max-md:text-base font-semibold text-[#424242]">
+                  {res?.title + ". " + res?.firstName + " " + res?.lastName}
+                </h1>
+                <p className="uppercase text-sm max-md:text-xs py-1 px-2 text-white bg-[#fe5f5c] rounded-full whitespace-nowrap text-center">
+                  {res?.role}
+                </p>
+              </div>
+            )}
+            {user.id === profileId &&
+              (dataLoading ? (
+                <Skeleton.Button active style={{ width: 120 }} />
+              ) : (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="ml-auto font-medium border border-gray-300 py-1 rounded-md flex flex-row gap-1 items-center px-2 hover:bg-gray-200 transition-all ease-in-out duration-100"
+                >
+                  <FaUserEdit />
+                  <p className="max-md:hidden">Edit profile</p>
+                </button>
+              ))}
             <EditProfile
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
@@ -140,23 +151,30 @@ const Profile = () => {
             />
           </div>
           <div className="mt-auto flex flex-col gap-2 max-md:text-sm">
-            <div className="flex flex-row items-center gap-1">
-              <FaBook className="text-[#fe5f5c]" />
-              <p>{res?.subject}</p>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <FaSchool className="text-[#fe5f5c]" />
-              <p>
-                {res?.school.name +
-                  ", " +
-                  res?.school.city +
-                  ", " +
-                  res?.school.country}
-              </p>
-              <p className="text-sm py-1 px-2 text-white bg-[#00a06a] rounded-md whitespace-nowrap text-center">
-                {res?.grade}
-              </p>
-            </div>
+            {dataLoading ? (
+              <Skeleton active paragraph={{ rows: 1 }} />
+            ) : (
+              <>
+                <div className="flex flex-row items-center gap-1">
+                  <FaBook className="text-[#fe5f5c]" />
+                  <p>{res?.subject}</p>
+                </div>
+
+                <div className="flex flex-row gap-2 items-center">
+                  <FaSchool className="text-[#fe5f5c]" />
+                  <p>
+                    {res?.school.name +
+                      ", " +
+                      res?.school.city +
+                      ", " +
+                      res?.school.country}
+                  </p>
+                  <p className="text-sm py-1 px-2 text-white bg-[#00a06a] rounded-md whitespace-nowrap text-center">
+                    {res?.grade}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

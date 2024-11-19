@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../../components/Teacher/NavBar";
-import SideBar from "../../components/Teacher/SideBar";
+import SideBar from "../../components/Teacher/SideBar/SideBar";
 import { useEffect, useState } from "react";
 import ChooseSchool from "../../components/Teacher/ChooseSchool";
 

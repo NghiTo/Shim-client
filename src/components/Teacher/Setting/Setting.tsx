@@ -10,8 +10,10 @@ import { RootState } from "../../../store/store";
 import { toast } from "react-toastify";
 import { MdManageAccounts } from "react-icons/md";
 import { sendOtp } from "../../../apis/auth.api";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.user);
   const {
     register,
@@ -20,6 +22,7 @@ const Setting = () => {
     clearErrors,
     reset,
     setError,
+    watch,
   } = useForm<PasswordForm>({
     resolver: yupResolver(passwordSchema),
     mode: "onSubmit",
@@ -41,6 +44,8 @@ const Setting = () => {
 
   const handleDeleteAccount = () => {
     sendOtp();
+    navigate("/delete-account");
+    toast.info("An OTP has been sent to your email")
   };
 
   const onSubmit: SubmitHandler<PasswordForm> = (data) => {
@@ -48,6 +53,9 @@ const Setting = () => {
     const { confirmPassword, ...newData } = data;
     mutate(newData);
   };
+
+  const isFillForm =
+    watch("oldPassword") && watch("newPassword") && watch("confirmPassword");
 
   return (
     <div className="h-full bg-gray-100 py-4 max-md:px-2">
@@ -63,8 +71,7 @@ const Setting = () => {
             <input
               {...register("oldPassword")}
               type="password"
-              onInput={() => {}}
-              onChange={() => clearErrors("oldPassword")}
+              onFocus={() => clearErrors("oldPassword")}
               className="border border-gray-400 p-2 w-full rounded-md"
             />
             {errors.oldPassword && (
@@ -77,9 +84,8 @@ const Setting = () => {
             <p>New password {"(At least 6 characters)"}</p>
             <input
               {...register("newPassword")}
-              onInput={() => {}}
               type="password"
-              onChange={() => clearErrors("newPassword")}
+              onFocus={() => clearErrors("newPassword")}
               className="border border-gray-400 p-2 w-full rounded-md"
             />
             {errors.newPassword && (
@@ -92,8 +98,7 @@ const Setting = () => {
             <p>Confirm password</p>
             <input
               {...register("confirmPassword")}
-              onInput={() => {}}
-              onChange={() => clearErrors("confirmPassword")}
+              onFocus={() => clearErrors("confirmPassword")}
               type="password"
               className="border border-gray-400 p-2 w-full rounded-md"
             />
@@ -105,7 +110,12 @@ const Setting = () => {
           </div>
           <button
             type="submit"
-            className="py-2 rounded-lg bg-gray-300 text-gray-400 hover:bg-[#fe5f5c] hover:text-white transition-all ease-in-out"
+            disabled={!isFillForm}
+            className={`py-2 rounded-lg ${
+              isFillForm
+                ? "bg-[#fe5f5c] text-white"
+                : "bg-gray-300 text-gray-400"
+            }   transition-all ease-in-out`}
           >
             Update password
           </button>

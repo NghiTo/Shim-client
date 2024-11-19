@@ -11,6 +11,8 @@ import Occupation from "./components/Register/Occupation";
 import TeacherRegister from "./components/Register/TeacherRegister";
 import Profile from "./components/Teacher/Profile/Profile";
 import Setting from "./components/Teacher/Setting/Setting";
+import DeleteAccount from "./pages/DeleteAccount/DeleteAccount";
+import District from "./components/Teacher/District/District";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -66,7 +68,16 @@ const router = createBrowserRouter([
         path: "/teacher/settings",
         element: <Setting />,
       },
+      {
+        path: "/teacher/district",
+        element: <District />,
+      },
     ],
+  },
+  {
+    path: "/delete-account",
+    element: <DeleteAccount />,
+    errorElement: <ErrorFallBack />,
   },
   {
     path: "*",

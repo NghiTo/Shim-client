@@ -9,3 +9,8 @@ export const sendOtp = async () => {
   const res = await axiosInstance.get("/auth/sendOtp");
   return res;
 };
+
+export const verifyOtp = async (otp: string) => {
+  const res = await axiosInstance.post("/auth/verifyOtp", { otp });
+  return res;
+};

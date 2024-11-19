@@ -1,5 +1,5 @@
 import { Menu, MenuProps } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import {
   FaHandHoldingHeart,
   FaHouse,
@@ -11,6 +11,7 @@ import { IoPieChartOutline } from "react-icons/io5";
 import { RiBook2Line } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
+import CreateQuiz from "./CreateQuiz";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -53,11 +54,16 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
   const navigate = useNavigate();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleMenuClick = (key: string) => {
     setSelectedKeys([key]);
-    if (key === "1") {
-      navigate("/teacher");
+    switch (key) {
+      case "1":
+        navigate("/teacher");
+        break;
+      case "6":
+        navigate("/teacher/district");
+        break;
     }
   };
 
@@ -68,10 +74,14 @@ const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         alt="Logo"
         className="object-cover w-2/5 flex mx-auto mb-3"
       />
-      <button className="bg-[#fe5f5c] mx-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#fc8785] transition-all ease-in-out">
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="bg-[#fe5f5c] mx-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#fc8785] transition-all ease-in-out"
+      >
         <FaPlus className="text-xs" />
         <p>Create</p>
       </button>
+      <CreateQuiz isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Menu
         selectedKeys={selectedKeys}
         onSelect={({ key }) => handleMenuClick(key)}

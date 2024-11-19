@@ -35,3 +35,8 @@ export const changePassword = async (id: string, data: UserPassword) => {
   const res = await axiosInstance.put(`/users/changePassword/${id}`, data);
   return res.data;
 };
+
+export const deleteUser = async (id: string) => {
+  const res = await axiosInstance.delete(`/users/${id}`);
+  return res;
+};
