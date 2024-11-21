@@ -22,6 +22,7 @@ import { IoMdMenu } from "react-icons/io";
 import { RiBook2Line } from "react-icons/ri";
 import { IoPieChartOutline } from "react-icons/io5";
 import { SiGoogleclassroom } from "react-icons/si";
+import { openModal } from "../../store/modalSlice";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -121,7 +122,7 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         open={open}
         width={200}
       >
-        <button className="bg-[#fe5f5c] w-11/12 ml-2 my-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#f8a09f]">
+        <button onClick={() => dispatch(openModal())} className="bg-[#fe5f5c] w-11/12 ml-2 my-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#f8a09f]">
           <FaPlus className="text-xs" />
           <p>Create</p>
         </button>

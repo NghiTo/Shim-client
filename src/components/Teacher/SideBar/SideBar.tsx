@@ -1,5 +1,5 @@
 import { Menu, MenuProps } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import {
   FaHandHoldingHeart,
   FaHouse,
@@ -12,6 +12,8 @@ import { RiBook2Line } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import CreateQuiz from "./CreateQuiz";
+import { useDispatch } from "react-redux";
+import { openModal } from "../../../store/modalSlice";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -54,7 +56,7 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
   const handleMenuClick = (key: string) => {
     setSelectedKeys([key]);
     switch (key) {
@@ -75,13 +77,13 @@ const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         className="object-cover w-2/5 flex mx-auto mb-3"
       />
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => dispatch(openModal())}
         className="bg-[#fe5f5c] mx-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#fc8785] transition-all ease-in-out"
       >
         <FaPlus className="text-xs" />
         <p>Create</p>
       </button>
-      <CreateQuiz isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CreateQuiz />
       <Menu
         selectedKeys={selectedKeys}
         onSelect={({ key }) => handleMenuClick(key)}

@@ -1,28 +1,27 @@
 import { Modal } from "antd";
-import React from "react";
 import { FiInfo } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../../store/store";
+import { closeModal } from "../../../store/modalSlice";
 
-interface CreateQuizProps {
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const CreateQuiz: React.FC<CreateQuizProps> = ({
-  isModalOpen,
-  setIsModalOpen,
-}) => {
+const CreateQuiz = () => {
+  const isModalOpen = useSelector((state: RootState) => state.modal.isOpenModal)
+  const dispatch = useDispatch();
   return (
     <Modal
-      title={<p className="text-4xl">What would you like to create?</p>}
+      title={<p className="text-4xl max-md:text-2xl">What would you like to create?</p>}
       open={isModalOpen}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={() => dispatch(closeModal())}
       footer={null}
       width={1200}
       className="top-14"
     >
-      <div className="mt-8 grid grid-cols-3 gap-2">
-        <Link to={"/teacher/create-assessment"} className="flex flex-col gap-14 border border-gray-400 rounded-md p-6 cursor-pointer hover:bg-gray-100 hover:shadow-lg">
+      <div className="mt-8 grid grid-cols-3 max-md:grid-cols-1 gap-2 max-md:text-base">
+        <Link
+          to={"/create-assessment"}
+          className="flex flex-col gap-14 border border-gray-400 rounded-md p-6 cursor-pointer hover:bg-gray-100 hover:shadow-lg"
+        >
           <div className="flex flex-row items-center gap-2">
             <img
               src="/src/assets/quiz_solid_circle.png"

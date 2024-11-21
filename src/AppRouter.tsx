@@ -13,6 +13,7 @@ import Profile from "./components/Teacher/Profile/Profile";
 import Setting from "./components/Teacher/Setting/Setting";
 import DeleteAccount from "./pages/DeleteAccount/DeleteAccount";
 import District from "./components/Teacher/District/District";
+import Assessment from "./pages/Assessment/Assessment";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
         element: <District />,
       },
     ],
+  },
+  {
+    path: "/create-assessment",
+    element: <Assessment/>
   },
   {
     path: "/delete-account",
