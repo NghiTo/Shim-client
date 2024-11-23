@@ -1,5 +1,5 @@
 import { Modal, Select } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 import { RootState } from "../../../store/store";
@@ -25,7 +25,13 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const queryClient = useQueryClient();
   const user = useSelector((state: RootState) => state.user);
 
-  const { register, handleSubmit, setValue } = useForm<UserProfile>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset
+  } = useForm<UserProfile>({
     resolver: yupResolver(updateSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -45,7 +51,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
         console.log(err);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries("userInfo");
+        queryClient.invalidateQueries(["userInfo", user.id]);
         setIsModalOpen(false);
       },
     }
@@ -54,6 +60,18 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const onSubmit: SubmitHandler<UserProfile> = (formData) => {
     mutate(formData);
   };
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        title: data.title,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        subject: data.subject,
+        grade: data.grade,
+      });
+    }
+  }, [data, reset]);
 
   return (
     <Modal
@@ -64,7 +82,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
       onCancel={() => setIsModalOpen(false)}
       onOk={handleSubmit(onSubmit)}
     >
-      <form className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-2 w-full">
           <div className="w-1/6">
             <p>Title</p>
@@ -80,6 +98,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 { value: "Mx", label: "Mx" },
               ]}
             ></Select>
+            {errors && <div>Error</div>}
           </div>
           <div className="w-full">
             <p>First Name</p>
@@ -169,14 +188,17 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 data?.school.country}
             </p>
             <button
-              onClick={() => dispatch(setUser({ ...user, schoolId: "" }))}
+              onClick={() => {
+                setIsModalOpen(false);
+                dispatch(setUser({ ...user, schoolId: "" }));
+              }}
               className="py-1 px-2 bg-gray-300 hover:bg-gray-200 rounded-md ml-auto transition-colors ease-in-out"
             >
               Change
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </Modal>
   );
 };

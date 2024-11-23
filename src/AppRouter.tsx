@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorFallBack from "./pages/Error/ErrorFallBack";
 import { lazy, Suspense } from "react";
 import Loading from "./components/Loading/Loading";
@@ -14,9 +14,24 @@ import Setting from "./components/Teacher/Setting/Setting";
 import DeleteAccount from "./pages/DeleteAccount/DeleteAccount";
 import District from "./components/Teacher/District/District";
 import Assessment from "./pages/Assessment/Assessment";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
+import MultipleChoice from "./components/Assessment/MultipleChoice";
+import CreateQuiz from "./components/Assessment/CreateQuiz";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const user = useSelector((state: RootState) => state.user);
+  const isAuthenticated = Boolean(user?.id);
+
+  return isAuthenticated ? children : <Navigate replace to="/login" />;
+};
 
 const router = createBrowserRouter([
   {
@@ -55,9 +70,11 @@ const router = createBrowserRouter([
   {
     path: "/teacher",
     element: (
-      <Suspense fallback={<Loading />}>
-        <Teacher />
-      </Suspense>
+      <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <Teacher />
+        </Suspense>
+      </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,
     children: [
@@ -77,11 +94,35 @@ const router = createBrowserRouter([
   },
   {
     path: "/create-assessment",
-    element: <Assessment/>
+    element: (
+      <ProtectedRoute>
+        <Assessment />
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/create-quiz",
+    element: (
+      <ProtectedRoute>
+        <CreateQuiz />
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
+    children: [
+      {
+        path: "/create-quiz/multiple-choice",
+        element: <MultipleChoice />,
+      },
+    ],
   },
   {
     path: "/delete-account",
-    element: <DeleteAccount />,
+    element: (
+      <ProtectedRoute>
+        <DeleteAccount />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorFallBack />,
   },
   {

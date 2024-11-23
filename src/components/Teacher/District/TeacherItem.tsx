@@ -18,8 +18,6 @@ const TeacherItem: React.FC<TeacherItemProps> = ({
   avatarUrl,
   subject
 }) => {
-  console.log(id);
-  
   return (
     <Link to={`/teacher/profile/${id}`} className="border border-gray-300 rounded-lg p-3 flex flex-row gap-4 cursor-pointer hover:bg-[#f5f3f3] transition-all ease-in-out">
       <img

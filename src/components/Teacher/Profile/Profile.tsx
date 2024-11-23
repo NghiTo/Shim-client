@@ -27,7 +27,7 @@ const Profile = () => {
     isLoading: dataLoading,
     isError,
   } = useQuery<UserResponse>(
-    "userInfo",
+    ["userInfo", profileId],
     () => findUserById(profileId as string),
     {
       staleTime: 0,
@@ -83,7 +83,9 @@ const Profile = () => {
       <div className="rounded-xl bg-white p-8 max-md:p-4 flex flex-row gap-8 max-md:gap-2">
         <div
           onClick={handleImageClick}
-          className="w-1/6 cursor-pointer group relative max-md:hidden"
+          className={`w-1/6 ${
+            user.id === profileId ? "cursor-pointer" : ""
+          }  group relative max-md:hidden`}
         >
           {dataLoading ? (
             <Skeleton.Avatar
@@ -99,19 +101,23 @@ const Profile = () => {
               className="w-full h-auto aspect-square rounded-full object-cover"
             />
           )}
-          <div className="absolute rounded-full inset-0 bg-black opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
           {isLoading && (
             <div className="rounded-full absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
             </div>
           )}
-          <FaCamera className="absolute hidden group-hover:block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl text-white" />
-          <input
-            type="file"
-            ref={inputFileRef}
-            onChange={handleImageChange}
-            className="absolute opacity-0 w-0 h-0"
-          />
+          {user.id === profileId && (
+            <>
+              <div className="absolute rounded-full inset-0 bg-black opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+              <FaCamera className="absolute hidden group-hover:block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl text-white" />
+              <input
+                type="file"
+                ref={inputFileRef}
+                onChange={handleImageChange}
+                className="absolute opacity-0 w-0 h-0"
+              />
+            </>
+          )}
         </div>
         <div className="flex flex-col max-md:gap-4 w-full">
           <div className="flex flex-row gap-4 items-start">

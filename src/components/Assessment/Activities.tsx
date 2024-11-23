@@ -1,4 +1,10 @@
-const Activities = () => {
+import React from "react";
+
+interface ActivitiesProps {
+  onCreateFromScratch: () => void;
+}
+
+const Activities: React.FC<ActivitiesProps> = ({ onCreateFromScratch }) => {
   return (
     <div className="h-5/6 m-auto w-full flex flex-col gap-4 py-24 px-32 max-md:px-8 max-md:py-12">
       <h1 className="text-2xl font-semibold text-center">
@@ -29,7 +35,10 @@ const Activities = () => {
             <p className="text-gray-500">from documents, websites, text</p>
           </div>
         </div>
-        <div className="rounded-lg border border-gray-400 hover:border-[#fe5f5c] hover:border-2 cursor-pointer">
+        <div
+          onClick={onCreateFromScratch}
+          className="rounded-lg border border-gray-400 hover:border-[#fe5f5c] hover:border-2 cursor-pointer"
+        >
           <img
             src="/src/assets/z6051412207278_4d7ff135cd73b73cdae72a8101f0326a.jpg"
             alt=""

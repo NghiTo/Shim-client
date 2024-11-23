@@ -45,7 +45,7 @@ const Setting = () => {
   const handleDeleteAccount = () => {
     sendOtp();
     navigate("/delete-account");
-    toast.info("An OTP has been sent to your email")
+    toast.info("An OTP has been sent to your email");
   };
 
   const onSubmit: SubmitHandler<PasswordForm> = (data) => {
@@ -69,9 +69,10 @@ const Setting = () => {
           <div>
             <p>Old password</p>
             <input
-              {...register("oldPassword")}
+              {...register("oldPassword", {
+                onChange: () => clearErrors("oldPassword"),
+              })}
               type="password"
-              onFocus={() => clearErrors("oldPassword")}
               className="border border-gray-400 p-2 w-full rounded-md"
             />
             {errors.oldPassword && (
@@ -83,9 +84,10 @@ const Setting = () => {
           <div>
             <p>New password {"(At least 6 characters)"}</p>
             <input
-              {...register("newPassword")}
+              {...register("newPassword", {
+                onChange: () => clearErrors("newPassword"),
+              })}
               type="password"
-              onFocus={() => clearErrors("newPassword")}
               className="border border-gray-400 p-2 w-full rounded-md"
             />
             {errors.newPassword && (
@@ -97,8 +99,9 @@ const Setting = () => {
           <div>
             <p>Confirm password</p>
             <input
-              {...register("confirmPassword")}
-              onFocus={() => clearErrors("confirmPassword")}
+              {...register("confirmPassword", {
+                onChange: () => clearErrors("confirmPassword"),
+              })}
               type="password"
               className="border border-gray-400 p-2 w-full rounded-md"
             />
