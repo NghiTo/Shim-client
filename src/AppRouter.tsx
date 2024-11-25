@@ -96,7 +96,9 @@ const router = createBrowserRouter([
     path: "/create-assessment",
     element: (
       <ProtectedRoute>
-        <Assessment />
+        <Suspense fallback={<Loading />}>
+          <Assessment />
+        </Suspense>
       </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,

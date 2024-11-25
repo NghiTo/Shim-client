@@ -1,4 +1,4 @@
-import { Button, Segmented, Select } from "antd";
+import { Button, Select } from "antd";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -26,10 +26,6 @@ const CreateQuiz = () => {
               { value: "4", label: "4 points" },
             ]}
           ></Select>
-          <Segmented
-            className="w-fit border border-gray-500 bg-gray-100"
-            options={["Single correct answer", "Multiple correct answer"]}
-          />
         </div>
         <div className="ml-auto flex flex-row gap-2">
           <Select
