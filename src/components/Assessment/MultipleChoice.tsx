@@ -1,87 +1,149 @@
 import { useState } from "react";
 import { FaCheck, FaImage, FaPlus, FaTrash } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { setAnswers, setQuestion } from "../../store/quizSlice";
+
+const initialAnswers = [
+  {
+    id: 1,
+    bgColor: "#2d70ae",
+    focusBg: "#1b3d5c",
+    btnColor: "#729fc9",
+    iconBg: "#1b3d5c",
+    isCorrect: false,
+    text: "", // Thêm thuộc tính text
+  },
+  {
+    id: 2,
+    bgColor: "#2d9da6",
+    focusBg: "#1b5358",
+    btnColor: "#72bdc3",
+    iconBg: "#1b5358",
+    isCorrect: false,
+    text: "", // Thêm thuộc tính text
+  },
+  {
+    id: 3,
+    bgColor: "#efa929",
+    focusBg: "#7c5919",
+    btnColor: "#f4c56f",
+    iconBg: "#7c5919",
+    isCorrect: false,
+    text: "", // Thêm thuộc tính text
+  },
+  {
+    id: 4,
+    bgColor: "#d5546d",
+    focusBg: "#6f2f3b",
+    btnColor: "#e38c9d",
+    iconBg: "#6f2f3b",
+    isCorrect: false,
+    text: "", // Thêm thuộc tính text
+  },
+];
 
 const MultipleChoice = () => {
-  const initialAnswers = [
-    {
-      id: 1,
-      bgColor: "#2d70ae",
-      focusBg: "#1b3d5c",
-      btnColor: "#729fc9",
-      iconBg: "#1b3d5c",
-      isSelected: false,
-    },
-    {
-      id: 2,
-      bgColor: "#2d9da6",
-      focusBg: "#1b5358",
-      btnColor: "#72bdc3",
-      iconBg: "#1b5358",
-      isSelected: false,
-    },
-    {
-      id: 3,
-      bgColor: "#efa929",
-      focusBg: "#7c5919",
-      btnColor: "#f4c56f",
-      iconBg: "#7c5919",
-      isSelected: false,
-    },
-    {
-      id: 4,
-      bgColor: "#d5546d",
-      focusBg: "#6f2f3b",
-      btnColor: "#e38c9d",
-      iconBg: "#6f2f3b",
-      isSelected: false,
-    },
-  ];
-
+  const dispatch = useDispatch();
   const [isSingleChoice, setIsSingleChoice] = useState(true);
-  const [answers, setAnswers] = useState(initialAnswers);
+  const [choices, setChoices] = useState(initialAnswers);
+  const [deletedChoices, setDeletedChoices] = useState<typeof initialAnswers>(
+    []
+  );
+
+  const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch(setQuestion(e.target.value));
+  };
+
+  const handleAnswerChange = (id: number, value: string) => {
+    const updatedChoices = choices.map((choice) =>
+      choice.id === id ? { ...choice, text: value } : choice
+    );
+    setChoices(updatedChoices);
+
+    const updatedAnswers = updatedChoices.map((choice) => ({
+      id: choice.id,
+      text: choice.text,
+      isCorrect: choice.isCorrect,
+    }));
+    dispatch(setAnswers(updatedAnswers));
+  };
 
   const toggleMode = () => {
     setIsSingleChoice((prev) => !prev);
-    // Reset trạng thái isSelected về false
-    setAnswers((prev) =>
+    setChoices((prev) =>
       prev.map((answer) => ({
         ...answer,
-        isSelected: false,
+        isCorrect: false,
       }))
     );
   };
 
   const handleSelectAnswer = (id: number) => {
-    setAnswers((prev) =>
-      prev.map((answer) => {
-        if (isSingleChoice) {
-          return { ...answer, isSelected: answer.id === id };
-        }
-        return answer.id === id
-          ? { ...answer, isSelected: !answer.isSelected }
-          : answer;
-      })
-    );
+    const updatedChoices = choices.map((answer) => {
+      if (isSingleChoice) {
+        return { ...answer, isCorrect: answer.id === id };
+      }
+      return answer.id === id
+        ? { ...answer, isCorrect: !answer.isCorrect }
+        : answer;
+    });
+
+    setChoices(updatedChoices);
+
+    const updatedAnswers = updatedChoices.map((choice) => ({
+      id: choice.id,
+      text: choice.text,
+      isCorrect: choice.isCorrect,
+    }));
+
+    dispatch(setAnswers(updatedAnswers)); // Dispatch updated answers to Redux
   };
 
   const addAnswer = () => {
-    if (answers.length < 5) {
-      const newId = answers.length + 1;
-      const newAnswer = {
-        id: newId,
-        bgColor: "#9a4292",
-        focusBg: "#52264e",
-        btnColor: "#bb80b6",
-        iconBg: "#bb80b6",
-        isSelected: false,
-      };
-      setAnswers((prev) => [...prev, newAnswer]);
+    if (choices.length < 5) {
+      let newAnswer;
+
+      if (deletedChoices.length > 0) {
+        newAnswer = deletedChoices[deletedChoices.length - 1];
+        setDeletedChoices((prev) => prev.slice(0, -1));
+      } else {
+        const newId = choices.length + 1;
+        newAnswer = {
+          id: newId,
+          bgColor: "#9a4292",
+          focusBg: "#52264e",
+          btnColor: "#bb80b6",
+          iconBg: "#bb80b6",
+          isCorrect: false,
+          text: "",
+        };
+      }
+
+      const updatedChoices = [...choices, newAnswer];
+      setChoices(updatedChoices);
+
+      const updatedAnswers = updatedChoices.map((choice) => ({
+        id: choice.id,
+        text: choice.text || "",
+        isCorrect: choice.isCorrect,
+      }));
+      dispatch(setAnswers(updatedAnswers));
     }
   };
 
   const removeAnswer = () => {
-    if (answers.length > 2) {
-      setAnswers((prev) => prev.slice(0, -1));
+    if (choices.length > 2) {
+      const removedChoice = choices[choices.length - 1];
+      const updatedChoices = choices.slice(0, -1);
+      setChoices(updatedChoices);
+      setDeletedChoices((prev) => [...prev, removedChoice]);
+
+      const updatedAnswers = updatedChoices.map((choice) => ({
+        id: choice.id,
+        text: choice.text || "",
+        isCorrect: choice.isCorrect,
+      }));
+      dispatch(setAnswers(updatedAnswers));
     }
   };
 
@@ -93,19 +155,25 @@ const MultipleChoice = () => {
             <FaImage />
           </div>
           <textarea
+            onChange={handleQuestionChange}
             className="text-white w-full placeholder:text-[#c0b1bf] rounded-xl py-12 text-xl bg-[#461a42] outline-none text-center resize-none overflow-hidden"
             placeholder="Type question here"
           />
         </div>
-        <div className={`grid grid-cols-${answers.length} gap-2`}>
-          {answers.map((answer) => (
+        <div
+          className="grid gap-2"
+          style={{
+            gridTemplateColumns: `repeat(${choices.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {choices.map((answer) => (
             <div
               key={answer?.id}
               className="flex flex-col p-1 rounded-xl gap-2"
               style={{ backgroundColor: answer?.bgColor }}
             >
               <div className="flex flex-row gap-2">
-                {answers.length > 2 && (
+                {choices.length > 2 && (
                   <div
                     className="p-2 text-white rounded-md text-sm w-fit cursor-pointer"
                     style={{ backgroundColor: answer?.btnColor }}
@@ -125,7 +193,7 @@ const MultipleChoice = () => {
                   className={`p-2 text-white ${
                     isSingleChoice ? "rounded-full" : "rounded-md"
                   } text-sm w-fit ml-auto border ${
-                    answer.isSelected
+                    answer?.isCorrect
                       ? "border-green-500 bg-green-500"
                       : "border-white"
                   } cursor-pointer`}
@@ -137,6 +205,9 @@ const MultipleChoice = () => {
               </div>
               <div>
                 <textarea
+                  onChange={(e) =>
+                    handleAnswerChange(answer.id, e.target.value)
+                  }
                   className="text-white w-full rounded-xl py-12 text-xl outline-none text-center resize-none overflow-hidden"
                   style={{
                     backgroundColor: answer?.bgColor,
@@ -158,7 +229,7 @@ const MultipleChoice = () => {
                 : "Multiple correct answers"}
             </button>
           </div>
-          {answers.length < 5 && (
+          {choices.length < 5 && (
             <div
               className="ml-auto text-white bg-[#836580] p-2 rounded-md cursor-pointer"
               onClick={addAnswer}

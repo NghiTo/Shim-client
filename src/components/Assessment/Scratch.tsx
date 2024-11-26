@@ -5,7 +5,9 @@ import { FiSearch } from "react-icons/fi";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { LuFileType2, LuRectangleHorizontal } from "react-icons/lu";
 import { MdLabel } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setType } from "../../store/quizSlice";
 
 const descriptions = {
   "Multiple Choice":
@@ -50,9 +52,11 @@ const questionTypes = [
 
 const Scratch = () => {
   const [selectedType, setSelectedType] = useState<QuestionType | "">("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleProceed = () => {
     if (selectedType === "Multiple Choice") {
+      dispatch(setType("multipleChoice"));
       navigate("/create-quiz/multiple-choice");
     }
   };
