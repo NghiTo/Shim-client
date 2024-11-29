@@ -148,7 +148,7 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
       </div>
       <Popover
         placement="bottomRight"
-        title={"NghiTo"}
+        title={"Shim"}
         trigger="click"
         open={popoverVisible}
         onOpenChange={setPopoverVisible}

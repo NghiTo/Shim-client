@@ -1,10 +1,17 @@
-import React from "react";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { createBlankQuiz } from "../../apis/quiz.api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
-interface ActivitiesProps {
-  onCreateFromScratch: () => void;
-}
-
-const Activities: React.FC<ActivitiesProps> = ({ onCreateFromScratch }) => {
+const Activities = () => {
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user);
+  const { mutate } = useMutation((userId: string) => createBlankQuiz(userId), {
+    onSuccess: (quiz) => {
+      navigate(`/create-quiz/${quiz.data.id}`);
+    },
+  });
   return (
     <div className="h-5/6 m-auto w-full flex flex-col gap-4 py-24 px-32 max-md:px-8 max-md:py-12">
       <h1 className="text-2xl font-semibold text-center">
@@ -36,7 +43,9 @@ const Activities: React.FC<ActivitiesProps> = ({ onCreateFromScratch }) => {
           </div>
         </div>
         <div
-          onClick={onCreateFromScratch}
+          onClick={() => {
+            mutate(user.id);
+          }}
           className="rounded-lg border border-gray-400 hover:border-[#fe5f5c] hover:border-2 cursor-pointer"
         >
           <img

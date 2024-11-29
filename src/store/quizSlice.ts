@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Answer, QuizState } from "../types/quiz.type";
 
 const initialState: QuizState = {
+  title: "",
   question: "",
   answers: [],
   type: "",
@@ -13,6 +14,9 @@ const quizSlice = createSlice({
   name: "quiz",
   initialState,
   reducers: {
+    setTitle(state, action: PayloadAction<string>) {
+      state.title = action.payload;
+    },
     setQuestion(state, action: PayloadAction<string>) {
       state.question = action.payload;
     },

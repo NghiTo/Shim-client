@@ -16,7 +16,6 @@ import District from "./components/Teacher/District/District";
 import Assessment from "./pages/Assessment/Assessment";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
-import MultipleChoice from "./components/Assessment/MultipleChoice";
 import CreateQuiz from "./components/Assessment/CreateQuiz";
 
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -104,19 +103,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallBack />,
   },
   {
-    path: "/create-quiz",
+    path: "/create-quiz/:quizId",
     element: (
       <ProtectedRoute>
         <CreateQuiz />
       </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,
-    children: [
-      {
-        path: "/create-quiz/multiple-choice",
-        element: <MultipleChoice />,
-      },
-    ],
   },
   {
     path: "/delete-account",
