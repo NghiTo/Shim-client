@@ -7,6 +7,7 @@ export const quizSettingSchema = Yup.object().shape({
   subject: Yup.string().required("Subject is required"),
   grade: Yup.string().required("Grade is required"),
   isPublic: Yup.boolean(),
+  coverImg: Yup.string().nullable()
 });
 
 export const multipleChoiceSchema = Yup.object().shape({
@@ -15,7 +16,7 @@ export const multipleChoiceSchema = Yup.object().shape({
     .of(
       Yup.object().shape({
         content: Yup.string().required("Answer content is required"),
-        isCorrect: Yup.boolean().required(),
+        isCorrect: Yup.boolean(),
       })
     )
     .min(2, "You must provide at least 2 answers")

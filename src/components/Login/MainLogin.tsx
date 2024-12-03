@@ -1,23 +1,54 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { setUser } from "../../store/userSlice";
+import { useMutation } from "react-query";
+import { login } from "../../apis/auth.api";
 
 interface MainLoginProps {
   setContinueEmail: (value: boolean) => void;
 }
 
 const MainLogin: React.FC<MainLoginProps> = ({ setContinueEmail }) => {
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { mutate } = useMutation((id: string) => login(id), {
+    onSuccess: (res) => {
+      dispatch(
+        setUser({
+          id: res.data.id,
+          schoolId: res.data.schoolId,
+          avatarUrl: res.data.avatarUrl,
+        })
+      );
+      navigate(`/${res.data.role}`);
+    },
+  });
+
+  const googleLogin = async () => {
+    window.open("http://localhost:3000/auth/google", "_self");
+  };
+
+  useEffect(() => {
+    if (searchParams.get("userId")) {
+      mutate(searchParams.get("userId") as string);
+    }
+  }, [searchParams, mutate]);
+
   return (
     <div className="w-3/5 max-md:w-full py-4 px-8">
       <h1 className="font-medium text-2xl">Log in to Shim</h1>
-      <Link
-        to={""}
-        className="flex flex-row items-center gap-6 mt-4 border border-gray-300 p-2 rounded-lg hover:shadow-lg"
+      <div
+        onClick={googleLogin}
+        className="flex flex-row cursor-pointer items-center gap-6 mt-4 border border-gray-300 p-2 rounded-lg hover:shadow-lg"
       >
         <img src="/src/assets/google-logo-1.png" className="w-6" alt="Google" />
         <p className="font-medium text-xl">Continue with Google</p>
         <FaArrowRight className="ml-auto" />
-      </Link>
+      </div>
       <button
         onClick={() => setContinueEmail(true)}
         className="w-full flex flex-row items-center gap-6 mt-4 border border-gray-300 p-2 rounded-lg hover:shadow-lg"

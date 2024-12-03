@@ -30,7 +30,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
     handleSubmit,
     setValue,
     formState: { errors },
-    reset
+    reset,
   } = useForm<UserProfile>({
     resolver: yupResolver(updateSchema),
     mode: "onSubmit",
@@ -79,16 +79,22 @@ const EditProfile: React.FC<EditProfileProps> = ({
       title="Edit Profile"
       okText="Save"
       width={700}
-      onCancel={() => setIsModalOpen(false)}
+      onCancel={() => {
+        if (!data?.title || !data?.subject || !data?.grade) {
+          return
+        }
+        setIsModalOpen(false);
+      }}
       onOk={handleSubmit(onSubmit)}
     >
       <div className="flex flex-col gap-4">
         <div className="flex flex-row gap-2 w-full">
-          <div className="w-1/6">
+          <div className="w-1/5">
             <p>Title</p>
             <Select
               {...register("title")}
               defaultValue={data?.title}
+              className="w-full"
               onChange={(value) => setValue("title", value)}
               options={[
                 { value: "Mr", label: "Mr" },
@@ -98,7 +104,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 { value: "Mx", label: "Mx" },
               ]}
             ></Select>
-            {errors && <div>Error</div>}
+            {errors.title && (
+              <p className="text-red-500">{errors.title.message}</p>
+            )}
           </div>
           <div className="w-full">
             <p>First Name</p>
@@ -142,6 +150,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 { value: "12th", label: "12th" },
               ]}
             ></Select>
+            {errors.grade && (
+              <p className="text-red-500">{errors.grade.message}</p>
+            )}
           </div>
           <div className="w-1/3">
             <p>Subject</p>
@@ -175,6 +186,9 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 { value: "Korean", label: "Korean" },
               ]}
             ></Select>
+            {errors.subject && (
+              <p className="text-red-500">{errors.subject.message}</p>
+            )}
           </div>
         </div>
         <div>

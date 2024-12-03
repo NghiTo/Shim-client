@@ -1,13 +1,10 @@
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { createBlankQuiz } from "../../apis/quiz.api";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 
 const Activities = () => {
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user);
-  const { mutate } = useMutation((userId: string) => createBlankQuiz(userId), {
+  const { mutate } = useMutation(createBlankQuiz, {
     onSuccess: (quiz) => {
       navigate(`/create-quiz/${quiz.data.id}`);
     },
@@ -44,7 +41,7 @@ const Activities = () => {
         </div>
         <div
           onClick={() => {
-            mutate(user.id);
+            mutate();
           }}
           className="rounded-lg border border-gray-400 hover:border-[#fe5f5c] hover:border-2 cursor-pointer"
         >

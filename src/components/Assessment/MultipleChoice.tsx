@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Input, Button, Radio, Form, Space } from "antd";
+import { Modal, Input, Button, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import {
   Controller,
@@ -46,17 +46,18 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
 
   const [correctAnswer, setCorrectAnswer] = useState<number | null>(0);
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (data: MultipleChoiceForm) =>
       createMultipleChoiceQuestion(quizId as string, data.title, data.answers),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          ["questions", quizId],
-          ["quiz", quizId],
-        ]);
+        queryClient.invalidateQueries(["quiz", quizId]);
         reset();
+        setCorrectAnswer(0);
         setOpen(false);
+      },
+      onError: (err) => {
+        console.error(err);
       },
     }
   );
@@ -76,81 +77,95 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
   return (
     <Modal
       open={open}
-      onCancel={() => setOpen(false)}
+      confirmLoading={isLoading}
+      onCancel={() => {
+        reset();
+        setCorrectAnswer(0);
+        setOpen(false);
+      }}
       style={{ top: "8%" }}
       onOk={handleSubmit(onSubmit)}
       title="Create Multiple Choice Question"
     >
-      <Form layout="vertical">
-        <Form.Item
-          label="Question"
-          validateStatus={errors.title ? "error" : ""}
-          help={errors.title?.message}
-          required
-        >
-          <Controller
-            name="title"
-            control={control}
-            render={({ field }) => (
+      <div style={{ marginBottom: "16px" }}>
+        <label>Question</label>
+        <Controller
+          name="title"
+          control={control}
+          render={({ field }) => (
+            <div>
               <Input.TextArea
                 {...field}
                 placeholder="Enter your question"
                 rows={3}
+                style={{ width: "100%" }}
               />
-            )}
+              {errors.title && (
+                <span style={{ color: "red", fontSize: "12px" }}>
+                  {errors.title.message}
+                </span>
+              )}
+            </div>
+          )}
+        />
+      </div>
+      <label>Answer</label>
+      {fields.map((field, index) => (
+        <Space
+          key={field.id}
+          align="start"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            width: "100%",
+            marginTop: "10px",
+          }}
+        >
+          <Radio
+            checked={correctAnswer === index}
+            onChange={() => setCorrectAnswer(index)}
+            style={{ marginTop: "6px" }}
           />
-        </Form.Item>
-
-        <Form.Item
-          label="Answers"
-          validateStatus={errors.answers ? "error" : ""}
-          help={errors.answers?.message}
-          required
-        >
-          <Space direction="vertical" style={{ width: "100%" }}>
-            {fields.map((field, index) => (
-              <Space key={field.id} align="center" style={{ width: "100%" }}>
-                <Radio
-                  checked={correctAnswer === index}
-                  onChange={() => setCorrectAnswer(index)}
-                />
-                <Controller
-                  name={`answers.${index}.content`}
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder={`Answer ${index + 1}`}
-                      style={{ flex: 1 }}
-                    />
+          <div style={{ flex: 1 }}>
+            <Controller
+              name={`answers.${index}.content`}
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Input {...field} placeholder={`Answer ${index + 1}`} />
+                  {errors.answers?.[index]?.content && (
+                    <span style={{ color: "red", fontSize: "12px" }}>
+                      {errors.answers[index]?.content?.message}
+                    </span>
                   )}
-                />
+                </div>
+              )}
+            />
+          </div>
+          {fields.length > 2 && (
+            <Button
+              icon={<MinusOutlined />}
+              onClick={() => remove(index)}
+              danger
+              size="small"
+              style={{ marginTop: "2px" }}
+            />
+          )}
+        </Space>
+      ))}
 
-                {fields.length > 2 && (
-                  <Button
-                    icon={<MinusOutlined />}
-                    onClick={() => remove(index)}
-                    danger
-                    size="small"
-                  />
-                )}
-              </Space>
-            ))}
-          </Space>
-        </Form.Item>
-
-        <Button
-          type="dashed"
-          icon={<PlusOutlined />}
-          onClick={() =>
-            fields.length < 5 && append({ content: "", isCorrect: false })
-          }
-          disabled={fields.length >= 5}
-          style={{ width: "100%" }}
-        >
-          Add Answer
-        </Button>
-      </Form>
+      <Button
+        type="dashed"
+        icon={<PlusOutlined />}
+        onClick={() =>
+          fields.length < 5 && append({ content: "", isCorrect: false })
+        }
+        disabled={fields.length >= 5}
+        style={{ width: "100%", marginTop: "20px" }}
+      >
+        Add Answer
+      </Button>
     </Modal>
   );
 };

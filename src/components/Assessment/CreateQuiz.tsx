@@ -20,10 +20,14 @@ import { LuFileType2, LuRectangleHorizontal } from "react-icons/lu";
 import { BiCategory, BiMath } from "react-icons/bi";
 import { useState } from "react";
 import QuizSetting from "./QuizSetting";
-import { useQuery } from "react-query";
-import { findQuizById, getAllQuestions } from "../../apis/quiz.api";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  findQuizById,
+  updateAllQuestions,
+  updateQuiz,
+} from "../../apis/quiz.api";
 import MultipleChoice from "./MultipleChoice";
-import { QuestionResponse } from "../../types/quiz.type";
+import { QuestionResponse, QuestionUpdate } from "../../types/quiz.type";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -82,6 +86,7 @@ const questionTypes = [
 
 const CreateQuiz = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [openSetting, setOpenSetting] = useState(false);
   const [multipleChoice, setMultipleChoice] = useState(false);
   const { quizId } = useParams();
@@ -91,15 +96,39 @@ const CreateQuiz = () => {
     queryFn: () => findQuizById(quizId as string),
   });
 
-  const { data: questions } = useQuery({
-    queryKey: ["questions", quizId],
-    queryFn: () => getAllQuestions(quizId as string),
-  });
+  const { mutate: publishQuiz } = useMutation((status: string) =>
+    updateQuiz(quizId as string, { status })
+  );
 
-  const handleMenuClick = (e: { key: string }) => {
-    toast.success(`Time updated to ${e.key} successfully`, {
-      position: "bottom-left",
-    });
+  const { mutate: mutateAll } = useMutation(
+    (data: QuestionUpdate) => updateAllQuestions(quizId as string, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["quiz", quizId]);
+        toast.success("All questions updated successfully", {
+          position: "bottom-left",
+        });
+      },
+      onError: (err) => {
+        toast.error(err as string);
+      },
+    }
+  );
+
+  const handleTimeClick = (e: { key: string }) => {
+    if (quiz.data.questions.length === 0) {
+      toast.info("Please create a new question");
+      return;
+    }
+    mutateAll({ time: parseInt(e.key) });
+  };
+
+  const handlePointClick = (e: { key: string }) => {
+    if (quiz.data.questions.length === 0) {
+      toast.info("Please create a new question");
+      return;
+    }
+    mutateAll({ point: parseInt(e.key) });
   };
 
   const saveQuiz = () => {
@@ -107,7 +136,12 @@ const CreateQuiz = () => {
       setOpenSetting(true);
       return;
     }
-    toast.success(`Quiz saved successfully`);
+    if (quiz.data.questions.length < 5) {
+      toast.error("Quiz must have at least five questions");
+      return;
+    }
+    publishQuiz("finished");
+    navigate("/teacher");
   };
 
   const openModal = (label: string) => {
@@ -153,7 +187,7 @@ const CreateQuiz = () => {
             <p>Preview</p>
           </div>
           <Button onClick={saveQuiz} type="primary">
-            Save quiz
+            Publish quiz
           </Button>
         </div>
       </div>
@@ -162,7 +196,7 @@ const CreateQuiz = () => {
           <div className="rounded-lg bg-white flex flex-col border border-gray-300">
             <p className="text-xl font-medium m-4">Bulk update questions</p>
             <Dropdown
-              menu={{ items: itemsTime, onClick: handleMenuClick }}
+              menu={{ items: itemsTime, onClick: handleTimeClick }}
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div style={{ maxHeight: "200px", overflowY: "auto" }}>
@@ -177,7 +211,7 @@ const CreateQuiz = () => {
               </div>
             </Dropdown>
             <Dropdown
-              menu={{ items: itemsPoint }}
+              menu={{ items: itemsPoint, onClick: handlePointClick }}
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div
@@ -227,10 +261,13 @@ const CreateQuiz = () => {
               <p className="font-semibold text-xl">
                 {quiz?.data?.questions.length} question
               </p>
-              <p className="text-xl text-gray-500">{`(${quiz?.data?.point} point)`}</p>
+              <p className="text-xl text-gray-500">{`(${quiz?.data?.questions.reduce(
+                (acc: number, val: QuestionResponse) => acc + val.point,
+                0
+              )} points)`}</p>
             </div>
           )}
-          {questions?.data.length === 0 ? (
+          {quiz?.data.questions.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-6 border border-gray-300 rounded-lg bg-white text-center">
               <p className="text-xl font-semibold text-gray-500">
                 You haven't created any questions!
@@ -240,7 +277,7 @@ const CreateQuiz = () => {
               </p>
             </div>
           ) : (
-            questions?.data.map((question: QuestionResponse) => (
+            quiz?.data.questions.map((question: QuestionResponse) => (
               <Question key={question.id} question={question} />
             ))
           )}

@@ -1,10 +1,19 @@
-import { Dropdown, MenuProps } from "antd";
+import { Dropdown, MenuProps, Popconfirm, PopconfirmProps } from "antd";
 import React from "react";
 import { FaCheck, FaTrash } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdClose, MdEdit } from "react-icons/md";
 import { VscSettings } from "react-icons/vsc";
-import { AnswerResponse, QuestionResponse } from "../../types/quiz.type";
+import {
+  AnswerResponse,
+  QuestionResponse,
+  QuestionUpdate,
+} from "../../types/quiz.type";
+import { useMutation, useQueryClient } from "react-query";
+import { deleteQuestion, updateQuestion } from "../../apis/quiz.api";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { formatTime } from "../../utils/formatTime";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -49,33 +58,84 @@ interface QuestionProps {
 }
 
 const Question: React.FC<QuestionProps> = ({ question }) => {
+  const { quizId } = useParams();
+  const queryClient = useQueryClient();
+  const { mutate: mutateDelete } = useMutation(
+    () => deleteQuestion(quizId as string, question.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["quiz", quizId]);
+        toast.success("Question deleted successfully", {
+          position: "bottom-left",
+        });
+      },
+      onError: (err) => {
+        toast.error(err as string);
+      },
+    }
+  );
+
+  const confirm: PopconfirmProps["onConfirm"] = () => {
+    mutateDelete();
+  };
+
+  const { mutate: mutateUpdate } = useMutation(
+    (data: QuestionUpdate) =>
+      updateQuestion(quizId as string, question.id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["quiz", quizId]);
+        toast.success("Question updated successfully", {
+          position: "bottom-left",
+        });
+      },
+      onError: (err) => {
+        toast.error(err as string);
+      },
+    }
+  );
+
+  const handleTimeClick = (e: { key: string }) => {
+    mutateUpdate({ time: parseInt(e.key) });
+  };
+
+  const handlePointClick = (e: { key: string }) => {
+    mutateUpdate({ point: parseInt(e.key) });
+  };
+
   return (
     <div className="rounded-lg bg-white p-4 flex flex-col gap-5">
       <div className="flex flex-row gap-2">
         <div className="border border-gray-300 rounded-md px-2 py-1 w-fit text-sm">
-          1. Multiple Choice
+          {question.type
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/^\w/, (c) => c.toUpperCase())}
         </div>
         <Dropdown
-          menu={{ items: itemsTime }}
+          menu={{ items: itemsTime, onClick: handleTimeClick }}
           trigger={["click"]}
           dropdownRender={(menu) => (
             <div style={{ maxHeight: "200px", overflowY: "auto" }}>{menu}</div>
           )}
         >
           <div className="flex flex-row max-md:hidden items-center gap-2 text-sm py-1 px-2 border border-gray-300 rounded-md hover:bg-gray-100 cursor-pointer">
-            <p>1 minute</p>
+            <p>{formatTime(question.time)}</p>
             <IoIosArrowDown className="ml-auto" />
           </div>
         </Dropdown>
         <Dropdown
-          menu={{ items: itemsPoint }}
+          menu={{ items: itemsPoint, onClick: handlePointClick }}
           trigger={["click"]}
           dropdownRender={(menu) => (
             <div style={{ maxHeight: "200px", overflowY: "auto" }}>{menu}</div>
           )}
         >
           <div className="flex flex-row max-md:hidden items-center gap-2 text-sm py-1 px-2 border border-gray-300 rounded-md hover:bg-gray-100 cursor-pointer">
-            <p>1 point</p>
+            <p>
+              {question?.point > 1
+                ? question?.point + " points"
+                : question?.point + " point"}
+            </p>
             <IoIosArrowDown className="ml-auto" />
           </div>
         </Dropdown>
@@ -84,9 +144,18 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
             <MdEdit />
             <p>Edit</p>
           </div>
-          <div className="border max-md:hidden border-gray-300 rounded-md p-2 hover:bg-gray-100 cursor-pointer text-sm">
-            <FaTrash />
-          </div>
+          <Popconfirm
+            title="Delete the question"
+            description="Are you sure to delete this question?"
+            onConfirm={confirm}
+            okText="Yes"
+            cancelText="No"
+            placement="leftTop"
+          >
+            <div className="border max-md:hidden border-gray-300 rounded-md p-2 hover:bg-gray-100 cursor-pointer text-sm">
+              <FaTrash />
+            </div>
+          </Popconfirm>
           <div className="border md:hidden border-gray-300 rounded-md p-2 hover:bg-gray-100 cursor-pointer text-sm">
             <VscSettings />
           </div>
@@ -115,4 +184,4 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
   );
 };
 
-export default Question;
+export default React.memo(Question);

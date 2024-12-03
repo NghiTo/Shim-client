@@ -14,3 +14,13 @@ export const verifyOtp = async (otp: string) => {
   const res = await axiosInstance.post("/auth/verifyOtp", { otp });
   return res;
 };
+
+export const googleAuth = async () => {
+  const res = await axiosInstance.post("/auth/google");
+  return res.data;
+};
+
+export const login = async (id: string) => {
+  const res = await axiosInstance.post("/auth/login", { id });
+  return res.data;
+};

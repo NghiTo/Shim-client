@@ -1,12 +1,15 @@
 import { Modal, Select } from "antd";
-import defaultImg from "/src/assets/default-ava.png";
-import React from "react";
+import defaultImg from "/src/assets/logo_placeholder_sm.png";
+import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { quizSettingSchema } from "../../schemas/quizSchema";
 import { QuizResponse, quizSetting } from "../../types/quiz.type";
 import { useMutation, useQueryClient } from "react-query";
 import { updateQuiz } from "../../apis/quiz.api";
+import { FaCamera } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import { checkImage, readAsBase64 } from "../../utils/checkImage";
 
 interface QuizSettingProps {
   quiz: QuizResponse;
@@ -20,8 +23,10 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
   quiz,
 }) => {
   const queryClient = useQueryClient();
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+  const [previewImage, setPreviewImage] = useState(defaultImg);
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (data: quizSetting) => updateQuiz(quiz.id, data),
     {
       onSuccess: () => {
@@ -29,10 +34,40 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
         setOpenSetting(false);
       },
       onError: (err) => {
-        console.log(err);
+        toast.error(err as string);
       },
     }
   );
+
+  const handleImageClick = () => {
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
+  };
+
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const isValid = checkImage(file, "image");
+      if (isValid) {
+        try {
+          const dataImage: string | ArrayBuffer = await readAsBase64(file);
+
+          if (typeof dataImage === "string") {
+            setValue("coverImg", dataImage);
+            setPreviewImage(dataImage); // Cập nhật ảnh xem trước
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (err) {
+          toast.error("Failed to process the image");
+        }
+      } else {
+        toast.error("Invalid image format");
+      }
+    }
+  };
 
   const {
     register,
@@ -50,11 +85,19 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
       grade: quiz?.grade,
       subject: quiz?.subject,
       title: quiz?.title,
+      coverImg: quiz?.coverImg,
     },
   });
 
   const handleSave: SubmitHandler<quizSetting> = (data) => {
-    mutate(data);
+    const updatedData: quizSetting = {
+      title: data.title || "",
+      subject: data.subject || "",
+      grade: data.grade || "",
+      isPublic: data.isPublic || false,
+      coverImg: previewImage || data.coverImg || "",
+    };
+    mutate(updatedData);
   };
 
   return (
@@ -67,6 +110,7 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
       }}
       width={600}
       onOk={handleSubmit(handleSave)}
+      confirmLoading={isLoading}
     >
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
@@ -170,11 +214,27 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
             )}
           </div>
         </div>
-        <div className="h-full">
+        <div
+          className="relative w-full h-64 group cursor-pointer mt-auto"
+          onClick={handleImageClick}
+        >
           <img
-            src={defaultImg}
-            alt="ava"
-            className="w-3/4 m-auto h-auto aspect-square rounded-md object-cover"
+            src={quiz?.coverImg || previewImage}
+            alt="Quiz Cover"
+            className="w-full h-full object-cover rounded-md bg-gray-200 border border-gray-400"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md flex items-center justify-center">
+            <div className="text-white flex flex-col items-center gap-2">
+              <FaCamera className="text-3xl" />
+              <p className="text-sm">Click to upload</p>
+            </div>
+          </div>
+          <input
+            type="file"
+            ref={inputFileRef}
+            onChange={handleImageChange}
+            className="absolute opacity-0 w-full h-full cursor-pointer top-0"
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
       </div>

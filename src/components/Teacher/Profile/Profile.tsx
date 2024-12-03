@@ -13,7 +13,26 @@ import { AxiosError } from "axios";
 import { FaUserEdit } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import { UserResponse } from "../../../types/user.type";
-import { Skeleton } from "antd";
+import { Skeleton, Tabs, TabsProps } from "antd";
+import Library from "./Library";
+
+const items: TabsProps["items"] = [
+  {
+    key: "1",
+    label: "Library",
+    children: <Library />,
+  },
+  {
+    key: "2",
+    label: "Collections",
+    children: "Content of Tab Pane 2",
+  },
+  {
+    key: "3",
+    label: "Meme sets",
+    children: "Content of Tab Pane 3",
+  },
+];
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -30,7 +49,12 @@ const Profile = () => {
     ["userInfo", profileId],
     () => findUserById(profileId as string),
     {
-      staleTime: 0,
+      onSuccess: (res) => {
+        if (res && (!res.title || !res.grade || !res.subject)) {
+          setIsModalOpen(true);
+          toast.info("Please complete your profile");
+        }
+      },
     }
   );
 
@@ -80,7 +104,7 @@ const Profile = () => {
 
   return (
     <div className="bg-gray-100 p-8 max-md:py-8 max-md:px-0 max-md:min-h-screen h-full">
-      <div className="rounded-xl bg-white p-8 max-md:p-4 flex flex-row gap-8 max-md:gap-2">
+      <div className="rounded-t-xl bg-white p-8 max-md:p-4 flex flex-row gap-8 max-md:gap-2">
         <div
           onClick={handleImageClick}
           className={`w-1/6 ${
@@ -184,6 +208,16 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Tabs
+        defaultActiveKey="1"
+        items={items}
+        className="custom-tabs bg-[#f9f9f9] rounded-b-xl w-full"
+        tabBarStyle={{
+          borderBottom: "2px solid #eaeaea",
+          padding: "0 16px",
+        }}
+        tabBarGutter={40}
+      />
     </div>
   );
 };

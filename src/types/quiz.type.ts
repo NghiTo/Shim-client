@@ -11,7 +11,16 @@ export type quizSetting = {
   title: string;
   subject: string;
   grade: string;
+  coverImg?: string | null;
   isPublic?: boolean;
+};
+
+export type QuizUpdate = {
+  title?: string;
+  subject?: string;
+  grade?: string;
+  isPublic?: boolean;
+  status?: string;
 };
 
 export type Answer = {
@@ -25,15 +34,15 @@ export type QuizResponse = {
   coverImg: string | null;
   grade: string;
   isPublic: boolean;
-  point: number;
+  status: string;
   subject: string;
-  time: number;
   title: string;
+  questions: QuestionResponse[];
 };
 
 export type AnswerRequest = {
   content: string;
-  isCorrect: boolean;
+  isCorrect?: boolean;
 };
 
 export type MultipleChoiceForm = {
@@ -46,12 +55,23 @@ export type AnswerResponse = {
   coverImg?: string;
   content: string;
   isCorrect: boolean;
-}
+};
 
 export type QuestionResponse = {
   id: string;
   title: string;
   type: string;
+  time: number;
+  point: number;
   quizId: string;
   answers: AnswerResponse[];
+};
+
+export type QuestionUpdate = {
+  time?: number;
+  point?: number;
+};
+
+export type QuizFilter = {
+  status?: string;
 };

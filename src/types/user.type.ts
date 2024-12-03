@@ -18,14 +18,16 @@ export type RegisterForm = {
 };
 
 export type UserRegister = {
-  title: string;
-  grade: string;
-  subject: string;
+  id?: string
+  title?: string;
+  grade?: string;
+  subject?: string;
   firstName: string;
   lastName: string;
-  password: string;
+  password?: string;
   role: string;
-  email: string;
+  email?: string;
+  avatarUrl?: string;
 };
 
 export type UserUpdate = {
@@ -36,6 +38,7 @@ export type UserUpdate = {
   schoolId?: string;
   grade?: string;
   avatarUrl?: string | ArrayBuffer;
+  role?: string;
 };
 
 export type UserState = {

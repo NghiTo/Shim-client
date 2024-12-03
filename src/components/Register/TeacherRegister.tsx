@@ -26,7 +26,7 @@ const TeacherRegister = () => {
     reValidateMode: "onSubmit",
   });
 
-  const { mutate } = useMutation(createUser, {
+  const { mutate: create } = useMutation(createUser, {
     onSuccess: (res) => {
       dispatch(
         setUser({
@@ -44,7 +44,7 @@ const TeacherRegister = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = data;
     const email = localStorage.getItem("email") as string;
-    mutate({ ...userData, role: "teacher", email });
+    create({ ...userData, role: "teacher", email });
   };
 
   const title = watch("title");

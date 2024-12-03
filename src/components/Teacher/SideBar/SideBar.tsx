@@ -63,6 +63,9 @@ const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
       case "1":
         navigate("/teacher");
         break;
+      case "2":
+        navigate("/teacher/library");
+        break;
       case "6":
         navigate("/teacher/district");
         break;

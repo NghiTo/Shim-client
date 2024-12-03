@@ -1,8 +1,8 @@
-import { AnswerRequest, quizSetting } from "../types/quiz.type";
+import { AnswerRequest, QuestionUpdate, QuizFilter, QuizUpdate } from "../types/quiz.type";
 import axiosInstance from "../utils/http";
 
-export const createBlankQuiz = async (userId: string) => {
-  const res = await axiosInstance.post("/quiz", { userId });
+export const createBlankQuiz = async () => {
+  const res = await axiosInstance.post("/quiz");
   return res.data;
 };
 
@@ -11,9 +11,14 @@ export const findQuizById = async (quizId: string) => {
   return res.data;
 };
 
-export const updateQuiz = async (quizId: string, data: quizSetting) => {
+export const updateQuiz = async (quizId: string, data: QuizUpdate) => {
   const res = await axiosInstance.put(`/quiz/${quizId}`, data);
   return res.data;
+};
+
+export const getAllQuizzes = async (query?: QuizFilter) => {
+  const res = await axiosInstance.get("/quiz", { params: query });
+  return res.data.data;
 };
 
 export const createMultipleChoiceQuestion = async (
@@ -25,7 +30,27 @@ export const createMultipleChoiceQuestion = async (
   return res.data;
 };
 
-export const getAllQuestions = async (quizId: string) => {
-  const res = await axiosInstance.get(`/quiz/${quizId}/questions`);
+export const deleteQuestion = async (quizId: string, questionId: string) => {
+  const res = await axiosInstance.delete(`/quiz/${quizId}/${questionId}`);
+  return res.data;
+};
+
+export const updateQuestion = async (
+  quizId: string,
+  questionId: string,
+  data: QuestionUpdate
+) => {
+  const res = await axiosInstance.put(
+    `/quiz/${quizId}/questions/${questionId}`,
+    data
+  );
+  return res.data;
+};
+
+export const updateAllQuestions = async (
+  quizId: string,
+  data: QuestionUpdate
+) => {
+  const res = await axiosInstance.put(`/quiz/${quizId}/questions`, data);
   return res.data;
 };

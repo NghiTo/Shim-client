@@ -1,6 +1,42 @@
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMutation } from "react-query";
+import { createUser } from "../../apis/user.api";
+import { setUser } from "../../store/userSlice";
 
 const Occupation = () => {
+  const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { mutate: create } = useMutation(createUser, {
+    onSuccess: (res) => {
+      dispatch(
+        setUser({
+          id: res.data.id,
+          schoolId: res.data.schoolId,
+          avatarUrl: res.data.avatarUrl,
+        })
+      );
+      navigate("/teacher");
+    },
+  });
+
+  const createTeacher = () => {
+    if (searchParams.get("userId")) {
+      create({
+        id: searchParams.get("userId") as string,
+        email: searchParams.get("email") as string,
+        role: "teacher",
+        firstName: searchParams.get("firstName") as string,
+        lastName: searchParams.get("lastName") as string,
+        avatarUrl: searchParams.get("avatarUrl") as string,
+      });
+      return;
+    }
+    navigate("/signup/teacher");
+  };
+
   return (
     <div className="bg-gray-100 w-2/3 min-h-full mx-auto rounded-lg flex flex-col max-md:w-full px-8">
       <h1 className="text-center text-2xl py-8 font-semibold">I am</h1>
@@ -16,8 +52,8 @@ const Occupation = () => {
             <p>to participate in fun classroom activities</p>
           </div>
         </div>
-        <Link
-          to={"/signup/teacher"}
+        <div
+          onClick={createTeacher}
           className="w-1/3 max-md:w-full max-md:flex-row max-md:px-2 flex flex-col gap-4 items-center rounded-md text-center px-8 py-4 border-gray-400 cursor-pointer border hover:shadow-xl"
         >
           <img
@@ -29,7 +65,7 @@ const Occupation = () => {
             <h1 className="text-xl font-semibold">a teacher</h1>
             <p>to instruct, engage, and assess my students</p>
           </div>
-        </Link>
+        </div>
         <div className="w-1/3 max-md:w-full max-md:flex-row max-md:px-2 flex flex-col gap-4 items-center rounded-md text-center px-8 py-4 border-gray-400 cursor-pointer border hover:shadow-xl">
           <img
             src="/src/assets/signup-admin.png"
@@ -37,9 +73,7 @@ const Occupation = () => {
             className="w-1/2 object-cover max-md:w-1/5"
           />
           <div className="flex flex-col max-md:text-left">
-            <h1 className="text-xl font-semibold">
-              an administrator
-            </h1>
+            <h1 className="text-xl font-semibold">an administrator</h1>
             <p>instructional coach, curriculum or school lead</p>
           </div>
         </div>
