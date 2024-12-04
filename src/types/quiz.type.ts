@@ -38,6 +38,7 @@ export type QuizResponse = {
   subject: string;
   title: string;
   questions: QuestionResponse[];
+  createdAt?: string
 };
 
 export type AnswerRequest = {
@@ -51,7 +52,7 @@ export type MultipleChoiceForm = {
 };
 
 export type AnswerResponse = {
-  id: string;
+  id?: string;
   coverImg?: string;
   content: string;
   isCorrect: boolean;
@@ -70,6 +71,8 @@ export type QuestionResponse = {
 export type QuestionUpdate = {
   time?: number;
   point?: number;
+  title?: string;
+  answers?: AnswerResponse[];
 };
 
 export type QuizFilter = {

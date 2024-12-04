@@ -24,6 +24,11 @@ input::-webkit-inner-spin-button {
   background-color: rgb(238, 237, 237) !important;
 }
 
+.Shim .ant-menu-item-selected {
+  color: #fe5f5c !important;
+  background-color: rgb(238, 237, 237)!important;
+}
+
 .ant-menu-submenu-title {
   color: black !important;
 }
@@ -69,7 +74,6 @@ input::-webkit-inner-spin-button {
 .custom-tabs .ant-tabs-tab-active  {
   color: #ffffff;
   border-radius: 8px;
-  
 }
 
 .custom-tabs .ant-tabs-ink-bar {
@@ -80,6 +84,12 @@ input::-webkit-inner-spin-button {
 .custom-tabs .ant-tabs-content-holder {
   padding: 16px;
   background: #ffffff;
+  border-radius: 0 0 8px 8px;
+}
+
+.Shim .ant-tabs-content-holder {
+  padding: 16px;
+  background: #f3f4f6;
   border-radius: 0 0 8px 8px;
 }
 

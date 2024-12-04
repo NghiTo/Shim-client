@@ -26,8 +26,8 @@ import {
   updateAllQuestions,
   updateQuiz,
 } from "../../apis/quiz.api";
-import MultipleChoice from "./MultipleChoice";
 import { QuestionResponse, QuestionUpdate } from "../../types/quiz.type";
+import MultipleChoice from "./MultipleChoice/MultipleChoice";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -68,7 +68,7 @@ const itemsPoint: MenuProps["items"] = [
 ];
 
 const questionTypes = [
-  { label: "Multiple Choice", icon: <FaCheck />, color: "#8854c0" },
+  { label: "multipleChoice", icon: <FaCheck />, color: "#8854c0" },
   {
     label: "Fill in the Blank",
     icon: <LuRectangleHorizontal />,
@@ -88,7 +88,11 @@ const CreateQuiz = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [openSetting, setOpenSetting] = useState(false);
-  const [multipleChoice, setMultipleChoice] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [activeQuestion, setActiveQuestion] = useState<QuestionResponse | null>(
+    null
+  );
+  const [modalType, setModalType] = useState("");
   const { quizId } = useParams();
 
   const { data: quiz, isLoading } = useQuery({
@@ -144,12 +148,16 @@ const CreateQuiz = () => {
     navigate("/teacher");
   };
 
-  const openModal = (label: string) => {
-    switch (label) {
-      case "Multiple Choice":
-        setMultipleChoice(true);
-        break;
-    }
+  const openModal = (type: string, question: QuestionResponse | null) => {
+    setModalType(type);
+    setActiveQuestion(question);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActiveQuestion(null);
+    setTimeout(() => setModalType(""), 1000);
   };
 
   return (
@@ -235,7 +243,7 @@ const CreateQuiz = () => {
             {questionTypes.map((type) => (
               <div
                 key={type.label}
-                onClick={() => openModal(type.label)}
+                onClick={() => openModal(type.label, null)}
                 className={`flex flex-row items-center h-fit gap-2 hover:bg-gray-200 w-full cursor-pointer p-2 rounded-md`}
               >
                 <div
@@ -251,7 +259,13 @@ const CreateQuiz = () => {
               </div>
             ))}
           </div>
-          <MultipleChoice open={multipleChoice} setOpen={setMultipleChoice} />
+          {modalType === "multipleChoice" && (
+            <MultipleChoice
+              open={isModalOpen}
+              closeModal={closeModal}
+              question={activeQuestion}
+            />
+          )}
         </div>
         <div className="w-3/4 max-md:w-full flex flex-col gap-4">
           {isLoading ? (
@@ -278,7 +292,11 @@ const CreateQuiz = () => {
             </div>
           ) : (
             quiz?.data.questions.map((question: QuestionResponse) => (
-              <Question key={question.id} question={question} />
+              <Question
+                key={question.id}
+                question={question}
+                onEdit={openModal}
+              />
             ))
           )}
         </div>

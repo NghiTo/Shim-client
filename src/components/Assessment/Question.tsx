@@ -14,6 +14,7 @@ import { deleteQuestion, updateQuestion } from "../../apis/quiz.api";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatTime } from "../../utils/formatTime";
+import { convertCamelCaseToTitleCase } from "../../utils/formatText";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -55,9 +56,10 @@ const itemsPoint: MenuProps["items"] = [
 
 interface QuestionProps {
   question: QuestionResponse;
+  onEdit: (type: string, question: QuestionResponse | null) => void;
 }
 
-const Question: React.FC<QuestionProps> = ({ question }) => {
+const Question: React.FC<QuestionProps> = ({ question, onEdit }) => {
   const { quizId } = useParams();
   const queryClient = useQueryClient();
   const { mutate: mutateDelete } = useMutation(
@@ -107,9 +109,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
     <div className="rounded-lg bg-white p-4 flex flex-col gap-5">
       <div className="flex flex-row gap-2">
         <div className="border border-gray-300 rounded-md px-2 py-1 w-fit text-sm">
-          {question.type
-            .replace(/([a-z])([A-Z])/g, "$1 $2")
-            .replace(/^\w/, (c) => c.toUpperCase())}
+          {convertCamelCaseToTitleCase(question.type)}
         </div>
         <Dropdown
           menu={{ items: itemsTime, onClick: handleTimeClick }}
@@ -140,7 +140,10 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
           </div>
         </Dropdown>
         <div className="flex flex-row gap-2 items-center ml-auto">
-          <div className="flex flex-row gap-1 border max-md:hidden border-gray-300 rounded-md py-1 items-center text-sm px-2 hover:bg-gray-100 cursor-pointer">
+          <div
+            onClick={() => onEdit(question.type, question)}
+            className="flex flex-row gap-1 border max-md:hidden border-gray-300 rounded-md py-1 items-center text-sm px-2 hover:bg-gray-100 cursor-pointer"
+          >
             <MdEdit />
             <p>Edit</p>
           </div>

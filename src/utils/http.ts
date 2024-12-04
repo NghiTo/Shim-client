@@ -18,18 +18,17 @@ type FailedRequest = {
 };
 
 let isRefreshing = false;
-let failedQueue: FailedRequest[] = [];
+const failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: unknown, token: string | null) => {
-  failedQueue.forEach((prom) => {
+  while (failedQueue.length > 0) {
+    const { resolve, reject } = failedQueue.shift()!;
     if (token) {
-      prom.resolve(token);
+      resolve(token);
     } else {
-      prom.reject(error);
+      reject(error);
     }
-  });
-
-  failedQueue = [];
+  }
 };
 
 axiosInstance.interceptors.response.use(
@@ -42,26 +41,28 @@ axiosInstance.interceptors.response.use(
       error.response.status === 401 &&
       !originalRequest._retry
     ) {
-      originalRequest._retry = true;
+      Object.defineProperty(originalRequest, "_retry", {
+        value: true,
+        writable: true,
+        configurable: true,
+      });
 
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(() => {
-            return axiosInstance(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+          .then(() => axiosInstance(originalRequest))
+          .catch((err) => Promise.reject(err));
       }
 
       isRefreshing = true;
 
       try {
         await getNewAccessToken();
+        processQueue(null, "Token refreshed successfully");
         return axiosInstance(originalRequest);
       } catch (err) {
+        processQueue(err, null);
         store.dispatch(clearUser());
         localStorage.clear();
         if (window.confirm("Your login session has expired")) {
@@ -69,7 +70,6 @@ axiosInstance.interceptors.response.use(
         } else {
           window.location.href = "/";
         }
-        processQueue(err, null);
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

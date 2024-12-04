@@ -9,7 +9,7 @@ import { Skeleton } from "antd";
 const Library = () => {
   const { data: quizzes, isLoading } = useQuery({
     queryKey: "quizzes",
-    queryFn: () => getAllQuizzes({status: "finished"}),
+    queryFn: () => getAllQuizzes({ status: "finished" }),
   });
 
   return (
@@ -28,7 +28,10 @@ const Library = () => {
         ) : (
           quizzes?.map((quiz: QuizResponse) => {
             return (
-              <div key={quiz.id} className="p-3 border border-gray-400 w-full rounded-md flex flex-row items-start gap-3">
+              <div
+                key={quiz.id}
+                className="p-3 border border-gray-400 w-full rounded-md flex flex-row items-start gap-3"
+              >
                 <img
                   src={quiz.coverImg || defaultImg}
                   alt="Quiz Ava"

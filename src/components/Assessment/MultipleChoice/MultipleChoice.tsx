@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Input, Button, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import {
@@ -7,19 +7,32 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { MultipleChoiceForm } from "../../types/quiz.type";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { multipleChoiceSchema } from "../../schemas/quizSchema";
 import { useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
-import { createMultipleChoiceQuestion } from "../../apis/quiz.api";
+import {
+  MultipleChoiceForm,
+  QuestionResponse,
+  QuestionUpdate,
+} from "../../../types/quiz.type";
+import { multipleChoiceSchema } from "../../../schemas/quizSchema";
+import {
+  createMultipleChoiceQuestion,
+  updateQuestion,
+} from "../../../apis/quiz.api";
+import { toast } from "react-toastify";
 
 interface MultipleChoiceProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  question: QuestionResponse | null;
+  closeModal: () => void;
 }
 
-const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
+const MultipleChoice: React.FC<MultipleChoiceProps> = ({
+  question,
+  open,
+  closeModal,
+}) => {
   const { quizId } = useParams();
   const queryClient = useQueryClient();
 
@@ -46,7 +59,7 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
 
   const [correctAnswer, setCorrectAnswer] = useState<number | null>(0);
 
-  const { mutate, isLoading } = useMutation(
+  const { mutate: create, isLoading } = useMutation(
     (data: MultipleChoiceForm) =>
       createMultipleChoiceQuestion(quizId as string, data.title, data.answers),
     {
@@ -54,10 +67,26 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
         queryClient.invalidateQueries(["quiz", quizId]);
         reset();
         setCorrectAnswer(0);
-        setOpen(false);
+        closeModal();
       },
       onError: (err) => {
-        console.error(err);
+        toast.error(err as string);
+      },
+    }
+  );
+
+  const { mutate: update } = useMutation(
+    (data: QuestionUpdate) =>
+      updateQuestion(quizId as string, question?.id as string, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["quiz", quizId]);
+        reset();
+        setCorrectAnswer(0);
+        closeModal();
+      },
+      onError: (err) => {
+        toast.error(err as string);
       },
     }
   );
@@ -70,9 +99,27 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
         isCorrect: correctAnswer === index,
       })),
     };
-
-    mutate(preparedData);
+    if (question) {
+      update(preparedData);
+      return;
+    }
+    create(preparedData);
   };
+
+  useEffect(() => {
+    if (question) {
+      reset({
+        title: question?.title || "",
+        answers: question.answers || [
+          { content: "", isCorrect: true },
+          { content: "", isCorrect: false },
+        ],
+      });
+      setCorrectAnswer(
+        question.answers?.findIndex((answer) => answer.isCorrect) ?? 0
+      );
+    }
+  }, [question, reset]);
 
   return (
     <Modal
@@ -81,11 +128,11 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({ open, setOpen }) => {
       onCancel={() => {
         reset();
         setCorrectAnswer(0);
-        setOpen(false);
+        closeModal();
       }}
       style={{ top: "8%" }}
       onOk={handleSubmit(onSubmit)}
-      title="Create Multiple Choice Question"
+      title="Multiple Choice Question"
     >
       <div style={{ marginBottom: "16px" }}>
         <label>Question</label>

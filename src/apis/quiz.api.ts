@@ -1,4 +1,9 @@
-import { AnswerRequest, QuestionUpdate, QuizFilter, QuizUpdate } from "../types/quiz.type";
+import {
+  AnswerRequest,
+  QuestionUpdate,
+  QuizFilter,
+  QuizUpdate,
+} from "../types/quiz.type";
 import axiosInstance from "../utils/http";
 
 export const createBlankQuiz = async () => {
@@ -19,6 +24,11 @@ export const updateQuiz = async (quizId: string, data: QuizUpdate) => {
 export const getAllQuizzes = async (query?: QuizFilter) => {
   const res = await axiosInstance.get("/quiz", { params: query });
   return res.data.data;
+};
+
+export const deleteQuiz = async (quizId: string) => {
+  const res = await axiosInstance.delete(`/quiz/${quizId}`);
+  return res.data;
 };
 
 export const createMultipleChoiceQuestion = async (

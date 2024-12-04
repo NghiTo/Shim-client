@@ -17,7 +17,8 @@ import Assessment from "./pages/Assessment/Assessment";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import CreateQuiz from "./components/Assessment/CreateQuiz";
-import Library from "./components/Teacher/Library/Library";
+import Library from "./components/Teacher/Library/MyLibrary";
+import CreatedByMe from "./components/Teacher/Library/CreatedByMe";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -93,6 +94,12 @@ const router = createBrowserRouter([
       {
         path: "/teacher/library",
         element: <Library />,
+        children: [
+          {
+            path: "/teacher/library/created-by-me",
+            element: <CreatedByMe />,
+          },
+        ],
       },
     ],
   },
