@@ -6,6 +6,7 @@ import { QuizResponse } from "../../../types/quiz.type";
 import { MdClass, MdSubject } from "react-icons/md";
 import { FaQuestion } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { timeAgo } from "../../../utils/formatTime";
 
 const Published = () => {
   const navigate = useNavigate();
@@ -30,7 +31,10 @@ const Published = () => {
             Pull in questions from the Quizizz library or make your own. It’s
             quick and easy!
           </p>
-          <button onClick={() => navigate("/create-assessment")} className="mt-4 px-6 py-2 text-white bg-[#fe605d] hover:bg-[#fc8785] rounded-md shadow-md">
+          <button
+            onClick={() => navigate("/create-assessment")}
+            className="mt-4 px-6 py-2 text-white bg-[#fe605d] hover:bg-[#fc8785] rounded-md shadow-md"
+          >
             Create Quiz
           </button>
         </div>
@@ -44,7 +48,7 @@ const Published = () => {
               <img
                 src={quiz.coverImg || defaultImg}
                 alt="Quiz Ava"
-                className="bg-gray-300 w-1/3 object-cover aspect-square h-auto rounded-md"
+                className="bg-gray-300 w-1/6 object-cover aspect-square h-auto rounded-md"
               />
               <div className="flex flex-col gap-1">
                 <p className="text-base font-semibold">{quiz.title}</p>
@@ -59,6 +63,9 @@ const Published = () => {
                 <div className="flex flex-row gap-1 items-center">
                   <FaQuestion />
                   <p>{quiz.questions.length} questions</p>
+                </div>
+                <div className="flex flex-row gap-1 items-center">
+                  <p>Published: {timeAgo(quiz.updatedAt as string)}</p>
                 </div>
               </div>
             </div>

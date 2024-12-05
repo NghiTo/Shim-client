@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import Question from "./Question";
 import { LuFileType2, LuRectangleHorizontal } from "react-icons/lu";
 import { BiCategory, BiMath } from "react-icons/bi";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import QuizSetting from "./QuizSetting";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -28,6 +28,8 @@ import {
 } from "../../apis/quiz.api";
 import { QuestionResponse, QuestionUpdate } from "../../types/quiz.type";
 import MultipleChoice from "./MultipleChoice/MultipleChoice";
+import FillInTheBlank from "./FillInTheBlank/FillInTheBlank";
+import { addSuffix, convertCamelCaseToTitleCase } from "../../utils/formatText";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -70,7 +72,7 @@ const itemsPoint: MenuProps["items"] = [
 const questionTypes = [
   { label: "multipleChoice", icon: <FaCheck />, color: "#8854c0" },
   {
-    label: "Fill in the Blank",
+    label: "fillInTheBlank",
     icon: <LuRectangleHorizontal />,
     color: "#8854c0",
   },
@@ -148,11 +150,14 @@ const CreateQuiz = () => {
     navigate("/teacher");
   };
 
-  const openModal = (type: string, question: QuestionResponse | null) => {
-    setModalType(type);
-    setActiveQuestion(question);
-    setIsModalOpen(true);
-  };
+  const openModal = useCallback(
+    (type: string, question: QuestionResponse | null) => {
+      setModalType(type);
+      setActiveQuestion(question);
+      setIsModalOpen(true);
+    },
+    []
+  );
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -255,12 +260,19 @@ const CreateQuiz = () => {
                 >
                   {type.icon}
                 </div>
-                <p>{type.label}</p>
+                <p>{convertCamelCaseToTitleCase(type.label)}</p>
               </div>
             ))}
           </div>
           {modalType === "multipleChoice" && (
             <MultipleChoice
+              open={isModalOpen}
+              closeModal={closeModal}
+              question={activeQuestion}
+            />
+          )}
+          {modalType === "fillInTheBlank" && (
+            <FillInTheBlank
               open={isModalOpen}
               closeModal={closeModal}
               question={activeQuestion}
@@ -273,12 +285,15 @@ const CreateQuiz = () => {
           ) : (
             <div className="flex flex-row gap-2 items-center">
               <p className="font-semibold text-xl">
-                {quiz?.data?.questions.length} question
+                {addSuffix(quiz?.data?.questions.length, "question")}
               </p>
-              <p className="text-xl text-gray-500">{`(${quiz?.data?.questions.reduce(
-                (acc: number, val: QuestionResponse) => acc + val.point,
-                0
-              )} points)`}</p>
+              <p className="text-xl text-gray-500">{`(${addSuffix(
+                quiz?.data?.questions.reduce(
+                  (acc: number, val: QuestionResponse) => acc + val.point,
+                  0
+                ),
+                "point"
+              )})`}</p>
             </div>
           )}
           {quiz?.data.questions.length === 0 ? (

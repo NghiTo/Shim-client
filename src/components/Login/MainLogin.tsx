@@ -112,7 +112,13 @@ const MainLogin: React.FC<MainLoginProps> = ({ setContinueEmail }) => {
           <p className="text-sm">Others</p>
         </div>
       </div>
-      <div className="flex flex-row mt-8 justify-center gap-2 max-md:hidden">
+      <div className="flex flex-row mt-8 justify-center items-center gap-2 max-md:hidden">
+        <p className="py-1">Forgot password?</p>
+        <Link to={"/signup"} className="underline italic hover:text-[#fe5f5c]">
+          Get your password
+        </Link>
+      </div>
+      <div className="flex flex-row justify-center gap-2 max-md:hidden">
         <p className="py-1">Don't have an account?</p>
         <Link
           to={"/signup"}

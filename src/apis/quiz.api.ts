@@ -36,7 +36,22 @@ export const createMultipleChoiceQuestion = async (
   title: string,
   answers: AnswerRequest[]
 ) => {
-  const res = await axiosInstance.post(`/quiz/${quizId}`, { title, answers });
+  const res = await axiosInstance.post(`/quiz/${quizId}/multiple-choice`, {
+    title,
+    answers,
+  });
+  return res.data;
+};
+
+export const createFillInTheBlankQuestion = async (
+  quizId: string,
+  title: string,
+  answers: AnswerRequest[]
+) => {
+  const res = await axiosInstance.post(`/quiz/${quizId}/fill-in-the-blank`, {
+    title,
+    answers,
+  });
   return res.data;
 };
 

@@ -100,7 +100,7 @@ const Draft = () => {
                   <p>{quiz.questions.length} questions</p>
                 </div>
                 <div className="flex flex-row gap-1 items-center">
-                  <p>{timeAgo(quiz.createdAt as string)}</p>
+                  <p>Last edited: {timeAgo(quiz.updatedAt as string)}</p>
                 </div>
               </div>
               <div className="flex flex-col ml-auto">

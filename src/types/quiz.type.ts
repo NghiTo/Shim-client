@@ -38,7 +38,7 @@ export type QuizResponse = {
   subject: string;
   title: string;
   questions: QuestionResponse[];
-  createdAt?: string
+  updatedAt?: string;
 };
 
 export type AnswerRequest = {
@@ -55,7 +55,7 @@ export type AnswerResponse = {
   id?: string;
   coverImg?: string;
   content: string;
-  isCorrect: boolean;
+  isCorrect?: boolean;
 };
 
 export type QuestionResponse = {
