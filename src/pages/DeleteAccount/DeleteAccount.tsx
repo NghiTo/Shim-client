@@ -40,7 +40,6 @@ const DeleteAccount = () => {
   const { mutate } = useMutation(verifyOtp, {
     onSuccess: () => {
       change(user.id);
-
     },
     onError: () => {
       setError("otp", { message: "Invalid OTP" });
@@ -72,8 +71,7 @@ const DeleteAccount = () => {
         <div>
           <p>Enter your OTP</p>
           <input
-            {...register("otp")}
-            onFocus={() => clearErrors("otp")}
+            {...register("otp", { onChange: () => clearErrors("otp") })}
             type="number"
             placeholder="Start typing..."
             className="p-2 outline-none border border-gray-400 rounded-md w-full focus:border-[#fe5f5c]"

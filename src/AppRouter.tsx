@@ -19,6 +19,8 @@ import { RootState } from "./store/store";
 import CreateQuiz from "./components/Assessment/CreateQuiz";
 import Library from "./components/Teacher/Library/MyLibrary";
 import CreatedByMe from "./components/Teacher/Library/CreatedByMe";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -66,6 +68,16 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+    errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/reset-password/:token",
+    element: <ResetPassword />,
     errorElement: <ErrorFallBack />,
   },
   {
