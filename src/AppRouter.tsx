@@ -21,6 +21,8 @@ import Library from "./components/Teacher/Library/MyLibrary";
 import CreatedByMe from "./components/Teacher/Library/CreatedByMe";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPassword/ResetPassword";
+import MainTeacher from "./components/Teacher/MainTeacher";
+import Search from "./pages/Search/Search";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -36,19 +38,31 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   return isAuthenticated ? children : <Navigate replace to="/login" />;
 };
 
+const RejectedRoute = ({ children }: ProtectedRouteProps) => {
+  const user = useSelector((state: RootState) => state.user);
+  const isAuthenticated = Boolean(user?.id);
+  return isAuthenticated ? <Navigate replace to="/teacher" /> : children;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <Suspense fallback={<Loading />}>
-        <Home />
+        <RejectedRoute>
+          <Home />
+        </RejectedRoute>
       </Suspense>
     ),
     errorElement: <ErrorFallBack />,
   },
   {
     path: "/signup",
-    element: <Register />,
+    element: (
+      <RejectedRoute>
+        <Register />
+      </RejectedRoute>
+    ),
     errorElement: <ErrorFallBack />,
     children: [
       {
@@ -67,17 +81,29 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <RejectedRoute>
+        <Login />
+      </RejectedRoute>
+    ),
     errorElement: <ErrorFallBack />,
   },
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: (
+      <RejectedRoute>
+        <ForgotPassword />
+      </RejectedRoute>
+    ),
     errorElement: <ErrorFallBack />,
   },
   {
     path: "/reset-password/:token",
-    element: <ResetPassword />,
+    element: (
+      <RejectedRoute>
+        <ResetPassword />
+      </RejectedRoute>
+    ),
     errorElement: <ErrorFallBack />,
   },
   {
@@ -91,6 +117,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorFallBack />,
     children: [
+      {
+        path: "",
+        element: <MainTeacher />,
+      },
       {
         path: "/teacher/profile/:profileId",
         element: <Profile />,
@@ -125,6 +155,16 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/teacher/search/:query",
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <Search />
+        </Suspense>
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/create-quiz/:quizId",
