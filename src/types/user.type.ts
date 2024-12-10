@@ -7,7 +7,7 @@ export type LoginForm = {
 
 export type EmailForm = Omit<LoginForm, "password">;
 
-export type RegisterForm = {
+export type TeacherRegisterForm = {
   title: string;
   grade: string;
   subject: string;
@@ -18,7 +18,7 @@ export type RegisterForm = {
 };
 
 export type UserRegister = {
-  id?: string
+  id?: string;
   title?: string;
   grade?: string;
   subject?: string;
@@ -39,12 +39,15 @@ export type UserUpdate = {
   grade?: string;
   avatarUrl?: string | ArrayBuffer;
   role?: string;
+  password?: string;
 };
 
 export type UserState = {
   id: string;
+  role: string
   schoolId: string;
   avatarUrl: string;
+  isAuthUser: boolean;
 };
 
 export type UserResponse = {
@@ -75,4 +78,12 @@ export type PasswordForm = {
 export type UserPassword = {
   oldPassword: string;
   newPassword: string;
-}
+};
+
+export type StudentRegisterForm = {
+  grade: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  confirmPassword: string;
+};

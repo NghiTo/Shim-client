@@ -30,6 +30,7 @@ import { QuestionResponse, QuestionUpdate } from "../../types/quiz.type";
 import MultipleChoice from "./MultipleChoice/MultipleChoice";
 import FillInTheBlank from "./FillInTheBlank/FillInTheBlank";
 import { addSuffix, convertCamelCaseToTitleCase } from "../../utils/formatText";
+import OpenEnded from "./OpenEnded/OpenEnded";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -76,7 +77,7 @@ const questionTypes = [
     icon: <LuRectangleHorizontal />,
     color: "#8854c0",
   },
-  { label: "Open Ended", icon: <LuFileType2 />, color: "#2d70ae" },
+  { label: "openEnded", icon: <LuFileType2 />, color: "#2d70ae" },
   { label: "Poll", icon: <FaChartBar />, color: "#2d70ae" },
   { label: "Match", icon: <FaLayerGroup />, color: "#00a06a" },
   { label: "Drag and Drop", icon: <FaHand />, color: "#00a06a" },
@@ -162,7 +163,7 @@ const CreateQuiz = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setActiveQuestion(null);
-    setTimeout(() => setModalType(""), 1000);
+    setTimeout(() => setModalType(""), 500);
   };
 
   return (
@@ -273,6 +274,13 @@ const CreateQuiz = () => {
           )}
           {modalType === "fillInTheBlank" && (
             <FillInTheBlank
+              open={isModalOpen}
+              closeModal={closeModal}
+              question={activeQuestion}
+            />
+          )}
+          {modalType === "openEnded" && (
+            <OpenEnded
               open={isModalOpen}
               closeModal={closeModal}
               question={activeQuestion}

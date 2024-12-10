@@ -1,6 +1,5 @@
 import { Select } from "antd";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterForm } from "../../types/user.type";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../../schemas/userSchema";
 import { useMutation } from "react-query";
@@ -8,6 +7,7 @@ import { createUser } from "../../apis/user.api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { TeacherRegisterForm } from "../../types/user.type";
 
 const TeacherRegister = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const TeacherRegister = () => {
     setValue,
     clearErrors,
     watch,
-  } = useForm<RegisterForm>({
+  } = useForm<TeacherRegisterForm>({
     resolver: yupResolver(registerSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -31,8 +31,10 @@ const TeacherRegister = () => {
       dispatch(
         setUser({
           id: res.data.id,
+          role: res.data.role,
           schoolId: res.data.schoolId,
           avatarUrl: res.data.avatarUrl,
+          isAuthUser: false,
         })
       );
       localStorage.removeItem("email");
@@ -40,7 +42,7 @@ const TeacherRegister = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<RegisterForm> = (data) => {
+  const onSubmit: SubmitHandler<TeacherRegisterForm> = (data) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = data;
     const email = localStorage.getItem("email") as string;

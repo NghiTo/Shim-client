@@ -20,8 +20,10 @@ const MainLogin: React.FC<MainLoginProps> = ({ setContinueEmail }) => {
       dispatch(
         setUser({
           id: res.data.id,
+          role: res.data.role,
           schoolId: res.data.schoolId,
           avatarUrl: res.data.avatarUrl,
+          isAuthUser: res.data.createdAt ? false : true,
         })
       );
       navigate(`/${res.data.role}`);

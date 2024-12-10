@@ -36,11 +36,13 @@ const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
       dispatch(
         setUser({
           id: res.data.id,
+          role: res.data.role,
           schoolId: res.data.schoolId,
-          avatarUrl: res.data.avatarUrl
+          avatarUrl: res.data.avatarUrl,
+          isAuthUser: false
         })
       );
-      navigate("/teacher");
+      navigate(`/${res.data.role}`);
     },
     onError: () => {
       toast.error("Invalid email or password");

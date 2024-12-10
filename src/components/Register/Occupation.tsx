@@ -14,11 +14,13 @@ const Occupation = () => {
       dispatch(
         setUser({
           id: res.data.id,
+          role: res.data.role,
           schoolId: res.data.schoolId,
           avatarUrl: res.data.avatarUrl,
+          isAuthUser: res.data.password ? false : true,
         })
       );
-      navigate("/teacher");
+      navigate(`/${res.data.role}`);
     },
   });
 
@@ -37,11 +39,29 @@ const Occupation = () => {
     navigate("/signup/teacher");
   };
 
+  const createStudent = () => {
+    if (searchParams.get("userId")) {
+      create({
+        id: searchParams.get("userId") as string,
+        email: searchParams.get("email") as string,
+        role: "student",
+        firstName: searchParams.get("firstName") as string,
+        lastName: searchParams.get("lastName") as string,
+        avatarUrl: searchParams.get("avatarUrl") as string,
+      });
+      return;
+    }
+    navigate("/signup/student");
+  };
+
   return (
     <div className="bg-gray-100 w-2/3 min-h-full mx-auto rounded-lg flex flex-col max-md:w-full px-8">
       <h1 className="text-center text-2xl py-8 font-semibold">I am</h1>
       <div className="flex flex-row max-md:flex-col gap-6 pb-8">
-        <div className="w-1/3 max-md:w-full flex flex-col max-md:flex-row max-md:px-2 gap-4 items-center rounded-md text-center px-8 py-4 border-gray-400 cursor-pointer border hover:shadow-xl">
+        <div
+          onClick={createStudent}
+          className="w-1/3 max-md:w-full flex flex-col max-md:flex-row max-md:px-2 gap-4 items-center rounded-md text-center px-8 py-4 border-gray-400 cursor-pointer border hover:shadow-xl"
+        >
           <img
             src="/src/assets/signup-student.png"
             alt="Student"

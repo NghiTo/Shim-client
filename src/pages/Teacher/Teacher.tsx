@@ -3,6 +3,7 @@ import NavBar from "../../components/Teacher/NavBar";
 import SideBar from "../../components/Teacher/SideBar/SideBar";
 import { useEffect, useState } from "react";
 import ChooseSchool from "../../components/Teacher/ChooseSchool";
+import CreatePassword from "../../components/Teacher/CreatePassword";
 
 const Teacher = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(() => {
@@ -17,6 +18,7 @@ const Teacher = () => {
   return (
     <div className="flex flex-row">
       <ChooseSchool />
+      <CreatePassword/>
       <SideBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />
       <div className="flex flex-col w-full">
         <NavBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />

@@ -77,4 +77,5 @@ export type QuestionUpdate = {
 
 export type QuizFilter = {
   status?: string;
+  title?: string;
 };

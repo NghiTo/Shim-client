@@ -55,10 +55,10 @@ const ChooseSchool = () => {
   };
 
   useEffect(() => {
-    if (!user.schoolId) {
+    if (!user.schoolId && !user.isAuthUser) {
       setIsModalOpen(true);
     }
-  }, [user.schoolId]);
+  }, [user.schoolId, user.isAuthUser]);
   return (
     <Modal
       title="Select your school"

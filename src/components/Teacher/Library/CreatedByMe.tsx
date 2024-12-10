@@ -1,21 +1,33 @@
 import { Tabs, TabsProps } from "antd";
 import Published from "./Published";
 import Draft from "./Draft";
-
-const tab: TabsProps["items"] = [
-  {
-    key: "1",
-    label: "Published",
-    children: <Published />,
-  },
-  {
-    key: "2",
-    label: "Draft",
-    children: <Draft />,
-  },
-];
+import { useQuery } from "react-query";
+import { getAllQuizzes } from "../../../apis/quiz.api";
 
 const CreatedByMe = () => {
+  const { data: published } = useQuery({
+    queryKey: "published",
+    queryFn: () => getAllQuizzes({ status: "finished" }),
+  });
+
+  const { data: draft } = useQuery({
+    queryKey: "draft",
+    queryFn: () => getAllQuizzes({ status: "unFinished" }),
+  });
+
+  const tab: TabsProps["items"] = [
+    {
+      key: "1",
+      label: `Published (${published?.length})`,
+      children: <Published />,
+    },
+    {
+      key: "2",
+      label: `Draft (${draft?.length})`,
+      children: <Draft />,
+    },
+  ];
+
   return (
     <div>
       <Tabs

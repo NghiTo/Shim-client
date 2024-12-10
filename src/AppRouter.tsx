@@ -23,6 +23,8 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 import MainTeacher from "./components/Teacher/MainTeacher";
 import Search from "./pages/Search/Search";
+import StudentRegister from "./components/Register/StudentRegister";
+import Student from "./pages/Student/Student";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -41,7 +43,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 const RejectedRoute = ({ children }: ProtectedRouteProps) => {
   const user = useSelector((state: RootState) => state.user);
   const isAuthenticated = Boolean(user?.id);
-  return isAuthenticated ? <Navigate replace to="/teacher" /> : children;
+  return isAuthenticated ? <Navigate replace to={`/${user?.role}`} /> : children;
 };
 
 const router = createBrowserRouter([
@@ -76,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "/signup/teacher",
         element: <TeacherRegister />,
+      },
+      {
+        path: "/signup/student",
+        element: <StudentRegister />,
       },
     ],
   },
@@ -146,6 +152,17 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/student",
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <Student />
+        </Suspense>
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
+  },
+  {
     path: "/create-assessment",
     element: (
       <ProtectedRoute>
@@ -165,6 +182,7 @@ const router = createBrowserRouter([
         </Suspense>
       </ProtectedRoute>
     ),
+    errorElement: <ErrorFallBack />,
   },
   {
     path: "/create-quiz/:quizId",

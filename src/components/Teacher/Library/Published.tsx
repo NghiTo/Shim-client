@@ -28,7 +28,7 @@ const Published = () => {
             Create your first quiz or lesson
           </h2>
           <p className="text-gray-600 mt-2">
-            Pull in questions from the Quizizz library or make your own. It’s
+            Pull in questions from the Shim library or make your own. It’s
             quick and easy!
           </p>
           <button

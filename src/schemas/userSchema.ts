@@ -56,3 +56,15 @@ export const passwordSchema = Yup.object().shape({
     .oneOf([Yup.ref("newPassword")], "Password must match")
     .required("Please confirm your new password"),
 });
+
+export const studentRegisterSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  grade: Yup.string().required("Grade is required"),
+  password: Yup.string()
+    .min(6, "Password must have at least 6 characters!")
+    .required("Please enter a password!"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Password must match")
+    .required("Please confirm your password"),
+});
