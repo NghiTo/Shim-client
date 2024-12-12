@@ -103,8 +103,8 @@ const CreateQuiz = () => {
     queryFn: () => findQuizById(quizId as string),
   });
 
-  const { mutate: publishQuiz } = useMutation((status: string) =>
-    updateQuiz(quizId as string, { status })
+  const { mutate: publishQuiz, isLoading: publishLoading } = useMutation(
+    (status: string) => updateQuiz(quizId as string, { status })
   );
 
   const { mutate: mutateAll } = useMutation(
@@ -200,7 +200,7 @@ const CreateQuiz = () => {
             <MdPlayArrow />
             <p>Preview</p>
           </div>
-          <Button onClick={saveQuiz} type="primary">
+          <Button loading={publishLoading} onClick={saveQuiz} type="primary">
             Publish quiz
           </Button>
         </div>

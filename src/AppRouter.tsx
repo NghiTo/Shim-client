@@ -25,6 +25,7 @@ import MainTeacher from "./components/Teacher/MainTeacher";
 import Search from "./pages/Search/Search";
 import StudentRegister from "./components/Register/StudentRegister";
 import Student from "./pages/Student/Student";
+import StudentSetting from "./components/Student/Setting/StudentSetting";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -36,14 +37,35 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const user = useSelector((state: RootState) => state.user);
   const isAuthenticated = Boolean(user?.id);
+  const role = user?.role;
+  const location = window.location.pathname;
 
-  return isAuthenticated ? children : <Navigate replace to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate replace to="/" />;
+  }
+  if (location === "/delete-account") {
+    return children;
+  }
+  if (role === "student" && !location.startsWith("/student")) {
+    return <Navigate replace to="/student" />;
+  }
+  if (role === "teacher" && !location.startsWith("/teacher")) {
+    return <Navigate replace to="/teacher" />;
+  }
+
+  return children;
 };
 
 const RejectedRoute = ({ children }: ProtectedRouteProps) => {
   const user = useSelector((state: RootState) => state.user);
   const isAuthenticated = Boolean(user?.id);
-  return isAuthenticated ? <Navigate replace to={`/${user?.role}`} /> : children;
+  const role = user?.role;
+
+  if (isAuthenticated) {
+    return <Navigate replace to={`/${role}`} />;
+  }
+
+  return children;
 };
 
 const router = createBrowserRouter([
@@ -161,9 +183,15 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,
+    children: [
+      {
+        path: "/student/settings",
+        element: <StudentSetting />,
+      },
+    ],
   },
   {
-    path: "/create-assessment",
+    path: "/teacher/create-assessment",
     element: (
       <ProtectedRoute>
         <Suspense fallback={<Loading />}>
@@ -185,7 +213,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallBack />,
   },
   {
-    path: "/create-quiz/:quizId",
+    path: "/teacher/create-quiz/:quizId",
     element: (
       <ProtectedRoute>
         <CreateQuiz />

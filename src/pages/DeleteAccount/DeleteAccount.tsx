@@ -31,9 +31,9 @@ const DeleteAccount = () => {
   const { mutate: change } = useMutation(deleteUser, {
     onSuccess: () => {
       toast.success("Account deleted successfully");
+      navigate("/");
       dispatch(clearUser());
       localStorage.clear();
-      navigate("/");
     },
   });
 

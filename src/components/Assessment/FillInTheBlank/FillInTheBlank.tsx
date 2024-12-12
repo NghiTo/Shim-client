@@ -65,7 +65,7 @@ const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
     }
   }, [blanks.length, append, fields]);
 
-  const { mutate: create } = useMutation(
+  const { mutate: create, isLoading } = useMutation(
     (data: MultipleChoiceForm) =>
       createFillInTheBlankQuestion(quizId as string, data.title, data.answers),
     {
@@ -111,7 +111,7 @@ const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
         <Button key="cancel" onClick={closeModal}>
           Cancel
         </Button>,
-        <Button key="save" type="primary" onClick={handleSubmit(onSubmit)}>
+        <Button key="save" type="primary" loading={isLoading} onClick={handleSubmit(onSubmit)}>
           Save
         </Button>,
       ]}

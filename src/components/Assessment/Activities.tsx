@@ -6,7 +6,7 @@ const Activities = () => {
   const navigate = useNavigate();
   const { mutate } = useMutation(createBlankQuiz, {
     onSuccess: (quiz) => {
-      navigate(`/create-quiz/${quiz.data.id}`);
+      navigate(`/teacher/create-quiz/${quiz.data.id}`);
     },
   });
   return (

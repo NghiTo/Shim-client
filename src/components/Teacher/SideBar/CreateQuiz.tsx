@@ -19,7 +19,7 @@ const CreateQuiz = () => {
     >
       <div className="mt-8 grid grid-cols-3 max-md:grid-cols-1 gap-2 max-md:text-base">
         <Link
-          to={"/create-assessment"}
+          to={"/teacher/create-assessment"}
           className="flex flex-col gap-14 border border-gray-400 rounded-md p-6 cursor-pointer hover:bg-gray-100 hover:shadow-lg"
         >
           <div className="flex flex-row items-center gap-2">

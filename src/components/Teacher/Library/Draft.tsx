@@ -67,7 +67,7 @@ const Draft = () => {
             quick and easy!
           </p>
           <button
-            onClick={() => navigate("/create-assessment")}
+            onClick={() => navigate("/teacher/create-assessment")}
             className="mt-4 px-6 py-2 text-white bg-[#fe605d] hover:bg-[#fc8785] rounded-md shadow-md"
           >
             Create Quiz
@@ -128,7 +128,7 @@ const Draft = () => {
                   </div>
                 </Dropdown>
                 <button
-                  onClick={() => navigate(`/create-quiz/${quiz.id}`)}
+                  onClick={() => navigate(`/teacher/create-quiz/${quiz.id}`)}
                   className="bg-gray-200 hover:bg-gray-300 py-1 px-2 rounded-md font-medium mt-auto"
                 >
                   Continue editing

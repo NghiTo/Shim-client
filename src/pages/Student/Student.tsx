@@ -1,8 +1,12 @@
+import { Outlet } from "react-router-dom";
 import StudentHeader from "../../components/Student/StudentHeader";
 
 const Student = () => {
   return (
-    <StudentHeader/>
+    <div className="min-h-screen">
+      <StudentHeader />
+      <Outlet/>
+    </div>
   );
 };
 
