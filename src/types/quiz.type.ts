@@ -31,6 +31,7 @@ export type Answer = {
 
 export type QuizResponse = {
   id: string;
+  quizCode: number;
   coverImg: string | null;
   grade: string;
   isPublic: boolean;

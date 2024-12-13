@@ -28,8 +28,8 @@ const Published = () => {
             Create your first quiz or lesson
           </h2>
           <p className="text-gray-600 mt-2">
-            Pull in questions from the Shim library or make your own. It’s
-            quick and easy!
+            Pull in questions from the Shim library or make your own. It’s quick
+            and easy!
           </p>
           <button
             onClick={() => navigate("/teacher/create-assessment")}
@@ -43,14 +43,14 @@ const Published = () => {
           return (
             <div
               key={quiz.id}
-              className="p-3 border border-gray-400 w-full rounded-md flex flex-row items-start gap-3"
+              className="p-3 border border-gray-400 w-full rounded-md flex flex-row h-full gap-3"
             >
               <img
                 src={quiz.coverImg || defaultImg}
                 alt="Quiz Ava"
                 className="bg-gray-300 w-1/6 object-cover aspect-square h-auto rounded-md"
               />
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col justify-between">
                 <p className="text-base font-semibold">{quiz.title}</p>
                 <div className="flex flex-row gap-1 items-center">
                   <MdClass />
@@ -67,6 +67,15 @@ const Published = () => {
                 <div className="flex flex-row gap-1 items-center">
                   <p>Published: {timeAgo(quiz.updatedAt as string)}</p>
                 </div>
+              </div>
+              <div className="ml-auto flex flex-col items-end">
+                <p>{quiz.quizCode}</p>
+                <button
+                  onClick={() => navigate(`/teacher/quiz/${quiz.id}`)}
+                  className="bg-gray-200 hover:bg-gray-300 py-1 px-2 rounded-md font-medium mt-auto"
+                >
+                  More details
+                </button>
               </div>
             </div>
           );

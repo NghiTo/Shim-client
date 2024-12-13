@@ -63,7 +63,7 @@ const Draft = () => {
             Create your first quiz or lesson
           </h2>
           <p className="text-gray-600 mt-2">
-            Pull in questions from the Quizizz library or make your own. It’s
+            Pull in questions from the Shim library or make your own. It’s
             quick and easy!
           </p>
           <button
@@ -85,7 +85,7 @@ const Draft = () => {
                 alt="Quiz Ava"
                 className="bg-gray-300 w-1/6 object-cover aspect-square h-auto rounded-md"
               />
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 justify-between">
                 <p className="text-base font-semibold">{quiz.title}</p>
                 <div className="flex flex-row gap-1 items-center">
                   <MdClass />

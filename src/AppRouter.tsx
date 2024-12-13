@@ -24,11 +24,13 @@ import ResetPassword from "./pages/ForgotPassword/ResetPassword";
 import MainTeacher from "./components/Teacher/MainTeacher";
 import Search from "./pages/Search/Search";
 import StudentRegister from "./components/Register/StudentRegister";
-import Student from "./pages/Student/Student";
 import StudentSetting from "./components/Student/Setting/StudentSetting";
+import MainStudent from "./components/Student/MainStudent";
+import QuizDetail from "./components/Teacher/QuizDetail/QuizDetail";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
+const Student = lazy(() => import("./pages/Student/Student"));
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -135,6 +137,15 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallBack />,
   },
   {
+    path: "/delete-account",
+    element: (
+      <ProtectedRoute>
+        <DeleteAccount />
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
+  },
+  {
     path: "/teacher",
     element: (
       <ProtectedRoute>
@@ -171,22 +182,13 @@ const router = createBrowserRouter([
           },
         ],
       },
-    ],
-  },
-  {
-    path: "/student",
-    element: (
-      <ProtectedRoute>
-        <Suspense fallback={<Loading />}>
-          <Student />
-        </Suspense>
-      </ProtectedRoute>
-    ),
-    errorElement: <ErrorFallBack />,
-    children: [
       {
-        path: "/student/settings",
-        element: <StudentSetting />,
+        path: "/teacher/quiz/:quizId",
+        element: (
+          <ProtectedRoute>
+            <QuizDetail />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -222,13 +224,25 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallBack />,
   },
   {
-    path: "/delete-account",
+    path: "/student",
     element: (
       <ProtectedRoute>
-        <DeleteAccount />
+        <Suspense fallback={<Loading />}>
+          <Student />
+        </Suspense>
       </ProtectedRoute>
     ),
     errorElement: <ErrorFallBack />,
+    children: [
+      {
+        path: "",
+        element: <MainStudent />,
+      },
+      {
+        path: "/student/settings",
+        element: <StudentSetting />,
+      },
+    ],
   },
   {
     path: "*",

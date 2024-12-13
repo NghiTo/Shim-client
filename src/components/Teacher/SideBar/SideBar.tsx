@@ -1,5 +1,5 @@
 import { Menu, MenuProps } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   FaHandHoldingHeart,
   FaHouse,
@@ -10,7 +10,7 @@ import {
 import { IoPieChartOutline } from "react-icons/io5";
 import { RiBook2Line } from "react-icons/ri";
 import { SiGoogleclassroom } from "react-icons/si";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CreateQuiz from "./CreateQuiz";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../../store/modalSlice";
@@ -18,21 +18,21 @@ import { openModal } from "../../../store/modalSlice";
 type MenuItem = Required<MenuProps>["items"][number];
 
 const items: MenuItem[] = [
-  { key: "1", icon: <FaHouse />, label: "Explore" },
-  { key: "2", icon: <RiBook2Line />, label: "Library" },
-  { key: "3", icon: <IoPieChartOutline />, label: "Report" },
+  { key: "/teacher", icon: <FaHouse />, label: "Explore" },
+  { key: "/teacher/library/created-by-me", icon: <RiBook2Line />, label: "Library" },
+  { key: "/teacher/report", icon: <IoPieChartOutline />, label: "Report" },
   {
-    key: "4",
+    key: "/teacher/classes",
     label: "Classes",
     icon: <SiGoogleclassroom />,
   },
   {
-    key: "5",
+    key: "/teacher/accommodations",
     label: "Accommodations",
     icon: <FaHandHoldingHeart />,
   },
   {
-    key: "6",
+    key: "/teacher/district",
     label: "Teachers",
     icon: <FaSchool />,
   },
@@ -41,10 +41,10 @@ const items: MenuItem[] = [
     label: "Help and Resources",
     icon: <FaQuestion />,
     children: [
-      { key: "7", label: "Teacher Resources" },
-      { key: "8", label: "Teacher wish list" },
-      { key: "9", label: "Contact Support" },
-      { key: "10", label: "Help Center" },
+      { key: "/teacher/resources", label: "Teacher Resources" },
+      { key: "/teacher/wishlist", label: "Teacher wish list" },
+      { key: "/teacher/support", label: "Contact Support" },
+      { key: "/teacher/help-center", label: "Help Center" },
     ],
   },
 ];
@@ -56,21 +56,17 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+
   const handleMenuClick = (key: string) => {
     setSelectedKeys([key]);
-    switch (key) {
-      case "1":
-        navigate("/teacher");
-        break;
-      case "2":
-        navigate("/teacher/library/created-by-me");
-        break;
-      case "6":
-        navigate("/teacher/district");
-        break;
-    }
+    navigate(key);
   };
+
+  useEffect(() => {
+    setSelectedKeys([location.pathname]);
+  }, [location.pathname, setSelectedKeys]);
 
   return (
     <div className="border-r border-gray-400 w-1/5 py-2 flex flex-col gap-2 min-h-screen max-md:hidden">

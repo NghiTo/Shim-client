@@ -122,7 +122,10 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
         open={open}
         width={200}
       >
-        <button onClick={() => dispatch(openModal())} className="bg-[#fe5f5c] w-11/12 ml-2 my-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#f8a09f]">
+        <button
+          onClick={() => dispatch(openModal())}
+          className="bg-[#fe5f5c] w-11/12 ml-2 my-2 flex flex-row items-center justify-center gap-1 text-white rounded-md py-2 hover:bg-[#f8a09f]"
+        >
           <FaPlus className="text-xs" />
           <p>Create</p>
         </button>
@@ -168,10 +171,7 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
             <Link
               to={"/teacher/settings"}
               className="flex flex-row items-center gap-2 hover:text-[#fe5f5c]"
-              onClick={() => {
-                closePopover();
-                setSelectedKeys([]);
-              }}
+              onClick={() => closePopover()}
             >
               <LuSettings />
               <p>Settings</p>
