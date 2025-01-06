@@ -27,6 +27,9 @@ import StudentRegister from "./components/Register/StudentRegister";
 import StudentSetting from "./components/Student/Setting/StudentSetting";
 import MainStudent from "./components/Student/MainStudent";
 import QuizDetail from "./components/Teacher/QuizDetail/QuizDetail";
+import PreStartQuiz from "./components/Student/PlayQuiz/PreStartQuiz";
+import Report from "./components/Teacher/Report/Report";
+import PlayQuiz from "./components/Student/PlayQuiz/PlayQuiz";
 
 const Home = lazy(() => import("./pages/Home/Home"));
 const Teacher = lazy(() => import("./pages/Teacher/Teacher"));
@@ -184,11 +187,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/teacher/quiz/:quizId",
-        element: (
-          <ProtectedRoute>
-            <QuizDetail />
-          </ProtectedRoute>
-        ),
+        element: <QuizDetail />,
+      },
+      {
+        path: "/teacher/reports",
+        element: <Report />,
       },
     ],
   },
@@ -243,6 +246,28 @@ const router = createBrowserRouter([
         element: <StudentSetting />,
       },
     ],
+  },
+  {
+    path: "/student/join/quiz/:quizCode",
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <PreStartQuiz />
+        </Suspense>
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
+  },
+  {
+    path: "/student/start/quiz/:quizCode",
+    element: (
+      <ProtectedRoute>
+        <Suspense fallback={<Loading />}>
+          <PlayQuiz />
+        </Suspense>
+      </ProtectedRoute>
+    ),
+    errorElement: <ErrorFallBack />,
   },
   {
     path: "*",

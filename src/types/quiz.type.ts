@@ -1,3 +1,5 @@
+import { UserResponse } from "./user.type";
+
 export type QuizState = {
   title: string;
   question: string;
@@ -38,6 +40,7 @@ export type QuizResponse = {
   status: string;
   subject: string;
   title: string;
+  user?: UserResponse;
   questions: QuestionResponse[];
   updatedAt?: string;
 };
@@ -79,4 +82,6 @@ export type QuestionUpdate = {
 export type QuizFilter = {
   status?: string;
   title?: string;
+  userId?: string;
+  quizCode?: string;
 };

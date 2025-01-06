@@ -94,7 +94,7 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
       title: data.title || "",
       subject: data.subject || "",
       grade: data.grade || "",
-      isPublic: data.isPublic || false,
+      isPublic: data.isPublic || true,
       coverImg: data.coverImg || "",
     };
     mutate(updatedData);

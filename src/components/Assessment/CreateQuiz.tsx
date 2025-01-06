@@ -95,7 +95,7 @@ const CreateQuiz = () => {
   const [activeQuestion, setActiveQuestion] = useState<QuestionResponse | null>(
     null
   );
-  const [modalType, setModalType] = useState("");
+  const [modalType, setModalType] = useState<string | null>("");
   const { quizId } = useParams();
 
   const { data: quiz, isLoading } = useQuery({
@@ -122,20 +122,12 @@ const CreateQuiz = () => {
     }
   );
 
-  const handleTimeClick = (e: { key: string }) => {
+  const handleDropdownClick = (type: "time" | "point", e: { key: string }) => {
     if (quiz.data.questions.length === 0) {
       toast.info("Please create a new question");
       return;
     }
-    mutateAll({ time: parseInt(e.key) });
-  };
-
-  const handlePointClick = (e: { key: string }) => {
-    if (quiz.data.questions.length === 0) {
-      toast.info("Please create a new question");
-      return;
-    }
-    mutateAll({ point: parseInt(e.key) });
+    mutateAll({ [type]: parseInt(e.key) });
   };
 
   const saveQuiz = () => {
@@ -143,12 +135,12 @@ const CreateQuiz = () => {
       setOpenSetting(true);
       return;
     }
-    if (quiz.data.questions.length < 5) {
-      toast.error("Quiz must have at least five questions");
+    if (quiz.data.questions.length < 1) {
+      toast.error("Quiz must have at least 1 question");
       return;
     }
     publishQuiz("finished");
-    navigate("/teacher");
+    navigate(`/teacher/quiz/${quizId}`);
   };
 
   const openModal = useCallback(
@@ -206,11 +198,14 @@ const CreateQuiz = () => {
         </div>
       </div>
       <div className="p-6 flex flex-row gap-6 max-md:flex-col items-start">
-        <div className="flex flex-col w-1/4 max-md:w-full gap-4 sticky top-4">
+        <div className="flex flex-col w-1/4 max-md:w-full gap-4">
           <div className="rounded-lg bg-white flex flex-col border border-gray-300">
             <p className="text-xl font-medium m-4">Bulk update questions</p>
             <Dropdown
-              menu={{ items: itemsTime, onClick: handleTimeClick }}
+              menu={{
+                items: itemsTime,
+                onClick: (e) => handleDropdownClick("time", e),
+              }}
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div style={{ maxHeight: "200px", overflowY: "auto" }}>
@@ -225,7 +220,10 @@ const CreateQuiz = () => {
               </div>
             </Dropdown>
             <Dropdown
-              menu={{ items: itemsPoint, onClick: handlePointClick }}
+              menu={{
+                items: itemsPoint,
+                onClick: (e) => handleDropdownClick("point", e),
+              }}
               trigger={["click"]}
               dropdownRender={(menu) => (
                 <div
@@ -304,24 +302,26 @@ const CreateQuiz = () => {
               )})`}</p>
             </div>
           )}
-          {quiz?.data.questions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-6 border border-gray-300 rounded-lg bg-white text-center">
-              <p className="text-xl font-semibold text-gray-500">
-                You haven't created any questions!
-              </p>
-              <p className="text-gray-400">
-                Please create new questions to submit quiz.
-              </p>
-            </div>
-          ) : (
-            quiz?.data.questions.map((question: QuestionResponse) => (
-              <Question
-                key={question.id}
-                question={question}
-                onEdit={openModal}
-              />
-            ))
-          )}
+          <div className="overflow-y-auto h-[450px] flex flex-col gap-4">
+            {quiz?.data.questions.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-6 border border-gray-300 rounded-lg bg-white text-center">
+                <p className="text-xl font-semibold text-gray-500">
+                  You haven't created any questions!
+                </p>
+                <p className="text-gray-400">
+                  Please create new questions to submit quiz.
+                </p>
+              </div>
+            ) : (
+              quiz?.data.questions.map((question: QuestionResponse) => (
+                <Question
+                  key={question.id}
+                  question={question}
+                  onEdit={openModal}
+                />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

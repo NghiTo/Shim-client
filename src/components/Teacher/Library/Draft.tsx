@@ -10,6 +10,8 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
 
 const items: MenuProps["items"] = [
   {
@@ -38,10 +40,11 @@ const items: MenuProps["items"] = [
 const Draft = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = useSelector((state: RootState) => state.user);
 
   const { data: quizzes, isLoading } = useQuery({
     queryKey: "draft",
-    queryFn: () => getAllQuizzes({ status: "unFinished" }),
+    queryFn: () => getAllQuizzes({ status: "unFinished", userId: user.id }),
   });
 
   const { mutate } = useMutation(deleteQuiz, {
@@ -63,8 +66,8 @@ const Draft = () => {
             Create your first quiz or lesson
           </h2>
           <p className="text-gray-600 mt-2">
-            Pull in questions from the Shim library or make your own. It’s
-            quick and easy!
+            Pull in questions from the Shim library or make your own. It’s quick
+            and easy!
           </p>
           <button
             onClick={() => navigate("/teacher/create-assessment")}
