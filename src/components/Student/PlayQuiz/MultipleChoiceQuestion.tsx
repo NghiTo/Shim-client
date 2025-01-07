@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
 import { Button } from "antd";
 import { FaArrowRight, FaCheck } from "react-icons/fa6";
-import { AnswerResponse } from "../../../types/quiz.type";
+import { QuestionResponse } from "../../../types/quiz.type";
+import { UseMutateFunction } from "react-query";
 
 interface MultipleChoiceQuestionProps {
-  question: {
-    id: string;
-    title: string;
-    answers: AnswerResponse[];
-  };
+  question: QuestionResponse;
   onSubmit: (selectedAnswer: string) => void;
+  mutate: UseMutateFunction<unknown, unknown, string, unknown>;
 }
 
 const MultipleChoiceQuestion = ({
   question,
   onSubmit,
+  mutate,
 }: MultipleChoiceQuestionProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [correctAnswerId, setCorrectAnswerId] = useState<string | null>(null);
@@ -33,11 +32,10 @@ const MultipleChoiceQuestion = ({
   };
 
   const handleSubmit = () => {
-    const correctAnswer = question?.answers.find(
-      (answer) => answer.isCorrect
-    )?.id;
-    setCorrectAnswerId(correctAnswer || null);
+    const correctAnswer = question?.answers.find((answer) => answer.isCorrect);
+    setCorrectAnswerId(correctAnswer?.id || null);
     setIsSubmitted(true);
+    mutate(correctAnswer?.content as string);
 
     setTimeout(() => {
       setIsTransitioning(true);
@@ -91,7 +89,7 @@ const MultipleChoiceQuestion = ({
             onClick={() =>
               !isSubmitted && handleAnswerSelect(answer.id as string)
             }
-            className={`flex flex-row gap-4 items-center cursor-pointer transition-all ease-in-out duration-300 p-4 rounded-full ${backgroundClass} ${borderClass}`}
+            className={`flex flex-row gap-4 items-center cursor-pointer transition-all ease-in-out hover:bg-gray-200 duration-300 p-4 rounded-full ${backgroundClass} ${borderClass}`}
           >
             <div
               className={`rounded-full text-white p-2 border transition-all ease-in-out duration-300 ${checkIconClass}`}
@@ -102,7 +100,11 @@ const MultipleChoiceQuestion = ({
                 }`}
               />
             </div>
-            <p className="text-lg text-[#000a38] font-medium">
+            <p
+              className={`text-lg text-[#000a38] font-medium transition-all ease-in-out duration-300 ${
+                isSelected && "pl-4"
+              }`}
+            >
               {answer.content}
             </p>
           </div>

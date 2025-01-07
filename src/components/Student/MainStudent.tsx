@@ -13,7 +13,7 @@ const MainStudent = () => {
       if (res.length < 1) {
         toast.error("Quiz is not found");
       } else {
-        navigate(`/student/join/quiz/${res[0].quizCode}`);
+        navigate(`/student/join/quiz/${res.quizCode}`);
       }
     },
   });

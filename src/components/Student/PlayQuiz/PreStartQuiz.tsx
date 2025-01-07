@@ -1,7 +1,7 @@
 import { IoClose, IoPersonCircleOutline } from "react-icons/io5";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllQuizzes } from "../../../apis/quiz.api";
+import { createQuizAttempt, getAllQuizzes } from "../../../apis/quiz.api";
 import defaultImg from "/src/assets/logo_placeholder_sm.png";
 import { QuizResponse } from "../../../types/quiz.type";
 import { addSuffix } from "../../../utils/formatText";
@@ -10,19 +10,29 @@ import { FaPlay } from "react-icons/fa6";
 import { FaUserFriends } from "react-icons/fa";
 import { RiShareBoxLine } from "react-icons/ri";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setAttemptId } from "../../../store/quizSlice";
 
 const PreStartQuiz = () => {
   const { quizCode } = useParams();
   const navigate = useNavigate();
-  const { data } = useQuery<QuizResponse[]>({
+  const dispatch = useDispatch();
+  const [countdown, setCountdown] = useState<number | string | null>(null);
+
+  const { data } = useQuery<QuizResponse>({
     queryKey: ["quiz", quizCode],
     queryFn: () => getAllQuizzes({ quizCode }),
   });
 
-  const [countdown, setCountdown] = useState<number | string | null>(null);
+  const { mutate } = useMutation(() => createQuizAttempt(data?.id), {
+    onSuccess: (res) => {
+      dispatch(setAttemptId({ attemptId: res.data.id }));
+    },
+  });
 
   const handleStartClick = () => {
-    setCountdown(3); // Bắt đầu đếm ngược từ 3 giây
+    mutate();
+    setCountdown(3);
     let counter = 3;
     const timer = setInterval(() => {
       counter -= 1;
@@ -47,27 +57,22 @@ const PreStartQuiz = () => {
           <div className="p-4 bg-white rounded-md flex flex-col gap-4 border border-gray-400 shadow-md">
             <div className="w-full flex flex-row gap-4">
               <img
-                src={(data && data[0].coverImg) || defaultImg}
+                src={data?.coverImg || defaultImg}
                 alt="avatar quiz"
                 className={`w-1/4 object-cover aspect-square border border-gray-400 rounded-md ${
-                  data && data[0].coverImg ? "" : "bg-gray-100"
+                  data?.coverImg ? "" : "bg-gray-100"
                 }`}
               />
               <div>
-                <h1 className="text-lg font-medium">{data && data[0].title}</h1>
-                <p>
-                  {addSuffix(
-                    (data && data[0].questions.length) as number,
-                    "question"
-                  )}
-                </p>
+                <h1 className="text-lg font-medium">{data?.title}</h1>
+                <p>{addSuffix(data?.questions.length as number, "question")}</p>
               </div>
             </div>
             <div className="flex flex-row gap-1">
               <IoPersonCircleOutline className="text-2xl" />
               <p>Author:</p>
-              <p>{data && data[0].user?.firstName}</p>
-              <p>{data && data[0].user?.lastName}</p>
+              <p>{data?.user?.firstName}</p>
+              <p>{data?.user?.lastName}</p>
             </div>
           </div>
           <div className="p-4 bg-white rounded-md flex flex-col gap-4 border border-gray-400 shadow-md">

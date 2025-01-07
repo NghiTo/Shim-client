@@ -1,26 +1,44 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getAllQuizzes } from "../../../apis/quiz.api";
 import { QuizResponse } from "../../../types/quiz.type";
 import quizBackground from "/Works/Shim-client/src/assets/bg-quiz.jpg";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
+import { createAnswer } from "../../../apis/answer.api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import QuizCompleted from "./QuizCompleted";
 
 const PlayQuiz = () => {
   const { quizCode } = useParams();
+  const user = useSelector((state: RootState) => state.user);
+  const quiz = useSelector((state: RootState) => state.quiz);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
 
-  const { data } = useQuery<QuizResponse[]>({
+  const { data } = useQuery<QuizResponse>({
     queryKey: ["quiz", quizCode],
     queryFn: () => getAllQuizzes({ quizCode }),
   });
 
-  const currentQuestion = data?.[0]?.questions[currentQuestionIndex];
+  const currentQuestion = data?.questions[currentQuestionIndex];
 
+  const { mutate } = useMutation((answer: string) =>
+    createAnswer(user.id, quiz.attemptId, currentQuestion?.id, data?.id, answer)
+  );
   const handleNextQuestion = () => {
-    setCurrentQuestionIndex((prev) => prev + 1);
+    if (data?.questions && currentQuestionIndex < data.questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    } else {
+      setIsQuizCompleted(true);
+    }
   };
+
+  if (isQuizCompleted) {
+    return <QuizCompleted />;
+  }
 
   return (
     <div
@@ -34,7 +52,7 @@ const PlayQuiz = () => {
           className="w-1/4 object-cover"
         />
         <p className="text-xl text-[#000a38] font-bold">
-          Question {currentQuestionIndex + 1} / {data?.[0]?.questions.length}
+          Question {currentQuestionIndex + 1} / {data?.questions.length}
         </p>
         <div className="w-full h-4 mt-1 flex flex-row bg-gray-200 rounded-md">
           <div
@@ -42,7 +60,7 @@ const PlayQuiz = () => {
             style={{
               width: `${
                 ((currentQuestionIndex + 1) * 100) /
-                (data?.[0]?.questions.length || 1)
+                (data?.questions.length || 1)
               }%`,
             }}
           ></div>
@@ -52,6 +70,7 @@ const PlayQuiz = () => {
           <MultipleChoiceQuestion
             question={currentQuestion}
             onSubmit={handleNextQuestion}
+            mutate={mutate}
           />
         )}
       </div>

@@ -79,3 +79,8 @@ export const updateAllQuestions = async (
   const res = await axiosInstance.put(`/quiz/${quizId}/questions`, data);
   return res.data;
 };
+
+export const createQuizAttempt = async (quizId?: string) => {
+  const res = await axiosInstance.post(`/quiz/${quizId}/start`);
+  return res.data;
+};
