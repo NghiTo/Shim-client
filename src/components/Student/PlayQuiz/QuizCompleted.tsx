@@ -1,6 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const QuizCompleted = () => {
+  const { quizCode } = useParams();
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex flex-col gap-6 justify-center items-center bg-gray-50 text-center transition-opacity duration-1000 animate-fade-in">
@@ -29,7 +30,10 @@ const QuizCompleted = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4 mt-4">
-        <button className="bg-[#fe5f5c] hover:bg-[#e14c4a] text-white font-semibold py-2 px-6 rounded-md shadow-md transition-all">
+        <button
+          onClick={() => navigate(`/student/join/quiz/${quizCode}`)}
+          className="bg-[#fe5f5c] hover:bg-[#e14c4a] text-white font-semibold py-2 px-6 rounded-md shadow-md transition-all"
+        >
           Play Again
         </button>
         <button
