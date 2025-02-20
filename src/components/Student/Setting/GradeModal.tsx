@@ -5,7 +5,6 @@ import { UserUpdate } from "../../../types/user.type";
 import { updateUser } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { toast } from "react-toastify";
 
 interface GradeModalProps {
   open: boolean;

@@ -8,7 +8,6 @@ import { useMutation } from "react-query";
 import { changePassword } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { toast } from "react-toastify";
 
 interface PasswordModalProps {
   open: boolean;

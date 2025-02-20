@@ -2,7 +2,6 @@ import { Input } from "antd";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { getAllQuizzes } from "../../apis/quiz.api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const MainStudent = () => {

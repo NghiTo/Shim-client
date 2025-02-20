@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import { getAllQuizzes } from "../../../apis/quiz.api";
 import { QuizResponse } from "../../../types/quiz.type";
-import quizBackground from "/Works/Shim-client/src/assets/bg-quiz.jpg";
+import quizBackground from "../../../assets/bg-quiz.jpg";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";

@@ -8,7 +8,6 @@ import { checkImage, readAsBase64 } from "../../../utils/checkImage";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 import { RootState } from "../../../store/store";
-import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { FaUserEdit } from "react-icons/fa";
 import EditProfile from "./EditProfile";

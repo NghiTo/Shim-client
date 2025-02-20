@@ -14,7 +14,6 @@ import {
   updateQuestion,
 } from "../../../apis/quiz.api";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 
 interface FillInTheBlankProps {
   open: boolean;

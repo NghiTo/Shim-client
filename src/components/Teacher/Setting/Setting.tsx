@@ -7,7 +7,6 @@ import { useMutation } from "react-query";
 import { changePassword } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-import { toast } from "react-toastify";
 import { MdManageAccounts } from "react-icons/md";
 import { sendOtp } from "../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";

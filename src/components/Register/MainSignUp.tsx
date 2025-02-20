@@ -1,7 +1,6 @@
 import { AxiosError } from "axios";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { findUserByEmail } from "../../apis/user.api";
 import { EmailForm } from "../../types/user.type";
 import { emailSchema } from "../../schemas/userSchema";

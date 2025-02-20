@@ -2,7 +2,6 @@ import { Input, Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { UserUpdate } from "../../../types/user.type";
 import { updateUser } from "../../../apis/user.api";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { memo, useState } from "react";

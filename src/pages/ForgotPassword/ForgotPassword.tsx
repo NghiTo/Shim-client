@@ -6,7 +6,6 @@ import { emailSchema } from "../../schemas/userSchema";
 import { EmailForm } from "../../types/user.type";
 import { useMutation } from "react-query";
 import { forgotPassword } from "../../apis/auth.api";
-import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();

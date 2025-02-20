@@ -14,7 +14,6 @@ import {
 } from "react-icons/io";
 import { MdLabel, MdPlayArrow } from "react-icons/md";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import Question from "./Question";
 import { LuFileType2, LuRectangleHorizontal } from "react-icons/lu";
 import { BiCategory, BiMath } from "react-icons/bi";

@@ -14,7 +14,6 @@ import { clearUser } from "../../../store/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordModal from "./PasswordModal";
 import { sendOtp } from "../../../apis/auth.api";
-import { toast } from "react-toastify";
 import { Popconfirm, PopconfirmProps } from "antd";
 
 const StudentSetting = () => {

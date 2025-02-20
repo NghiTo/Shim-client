@@ -6,7 +6,6 @@ import { passwordSchema } from "../../schemas/authSchema";
 import { PasswordForm } from "../../types/auth.type";
 import { useMutation } from "react-query";
 import { resetPassword } from "../../apis/auth.api";
-import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const navigate = useNavigate();

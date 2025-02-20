@@ -20,7 +20,6 @@ import {
   createMultipleChoiceQuestion,
   updateQuestion,
 } from "../../../apis/quiz.api";
-import { toast } from "react-toastify";
 
 interface MultipleChoiceProps {
   open: boolean;

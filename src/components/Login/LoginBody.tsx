@@ -1,16 +1,15 @@
-import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React, { useState } from "react";
 import { FaArrowLeft, FaRegEnvelope } from "react-icons/fa6";
 import { GoLock } from "react-icons/go";
 import { LoginForm } from "../../types/user.type";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../schemas/userSchema";
 import { useMutation } from "react-query";
 import { login } from "../../apis/user.api";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { Button, Form, Input, message } from "antd";
+import { useForm } from "antd/es/form/Form";
 
 interface LoginFormProps {
   setContinueEmail: (value: boolean) => void;
@@ -19,19 +18,10 @@ interface LoginFormProps {
 const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    register,
-    formState: { errors },
-    clearErrors,
-    watch,
-    handleSubmit,
-  } = useForm<LoginForm>({
-    resolver: yupResolver(loginSchema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-  });
+  const [isValidForm, setIsValidForm] = useState(false);
+  const [form] = useForm();
 
-  const { mutate } = useMutation(login, {
+  const { mutate, isLoading } = useMutation(login, {
     onSuccess: (res) => {
       dispatch(
         setUser({
@@ -39,23 +29,19 @@ const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
           role: res.data.role,
           schoolId: res.data.schoolId,
           avatarUrl: res.data.avatarUrl,
-          isAuthUser: false
+          isAuthUser: false,
         })
       );
       navigate(`/${res.data.role}`);
     },
     onError: () => {
-      toast.error("Invalid email or password");
+      message.error("Invalid email or password");
     },
   });
 
-  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+  const onSubmit = (data: LoginForm) => {
     mutate(data);
   };
-
-  const email = watch("email");
-  const password = watch("password");
-  const isValidForm = email && password;
 
   return (
     <div className="w-3/5 max-md:w-full py-4 px-8 flex flex-col gap-4 min-h-full">
@@ -67,56 +53,58 @@ const LoginBody: React.FC<LoginFormProps> = ({ setContinueEmail }) => {
         <p>Go back</p>
       </button>
       <h1 className="text-2xl font-medium">Continue with email</h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 pb-4"
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onSubmit}
+        className="flex flex-col pb-4"
+        onValuesChange={(_, allValues) => {
+          const { email, password } = allValues;
+          if (email && password) {
+            setIsValidForm(true);
+          } else {
+            setIsValidForm(false);
+          }
+        }}
       >
-        <div>
-          <p>Enter email address</p>
-          <div className="py-2 px-4 border-2 border-gray-300 rounded-md flex flex-row items-center gap-4 focus-within:border-[#fe5f5c] focus-within:border-2">
-            <FaRegEnvelope className="text-gray-400" />
-            <input
-              {...register("email", { onChange: () => clearErrors("email") })}
-              className="w-full bg-gray-100 max-md:bg-white outline-none"
-              type="text"
-              placeholder="name@example.com"
-            />
-          </div>
-          {errors.email && (
-            <span className="text-red-600 text-sm">{errors.email.message}</span>
-          )}
-        </div>
-        <div>
-          <p>Password</p>
-          <div className="py-2 px-4 border-2 border-gray-300 rounded-md flex flex-row items-center gap-4 focus-within:border-[#fe5f5c] focus-within:border-2">
-            <GoLock className="text-gray-400" />
-            <input
-              {...register("password", {
-                onChange: () => clearErrors("password"),
-              })}
-              className="w-full bg-gray-100 max-md:bg-white outline-none"
-              type="password"
-              placeholder="*******"
-            />
-          </div>
-          {errors.password && (
-            <span className="text-red-600 text-sm">
-              {errors.password.message}
-            </span>
-          )}
-        </div>
-        <button
+        <Form.Item<LoginForm>
+          label="Email"
+          name={"email"}
+          rules={loginSchema.email}
+          validateTrigger={["onChange", "onBlur"]}
+        >
+          <Input
+            prefix={<FaRegEnvelope />}
+            className="w-full bg-gray-100 max-md:bg-white py-2"
+            type="text"
+            placeholder="name@example.com"
+          />
+        </Form.Item>
+        <Form.Item<LoginForm>
+          label="Password"
+          name={"password"}
+          rules={loginSchema.password}
+        >
+          <Input
+            prefix={<GoLock />}
+            className="w-full bg-gray-100 max-md:bg-white py-2"
+            type="password"
+            placeholder="*******"
+          />
+        </Form.Item>
+        <Button
           disabled={!isValidForm}
-          type="submit"
-          className={`w-full py-2 rounded-md ${
+          loading={isLoading}
+          htmlType="submit"
+          className={`w-full py-4 hover:text-white rounded-md ${
             isValidForm
               ? "bg-[#fe5f5c] text-white"
               : "bg-gray-300 text-gray-400"
           }`}
         >
           Continue
-        </button>
-      </form>
+        </Button>
+      </Form>
     </div>
   );
 };

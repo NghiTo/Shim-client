@@ -12,7 +12,6 @@ import {
 import { useMutation, useQueryClient } from "react-query";
 import { deleteQuestion, updateQuestion } from "../../apis/quiz.api";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { formatTime } from "../../utils/formatTime";
 import { convertCamelCaseToTitleCase } from "../../utils/formatText";
 

@@ -8,7 +8,6 @@ import { deleteUser } from "../../apis/user.api";
 import { verifyOtp } from "../../apis/auth.api";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { toast } from "react-toastify";
 import { clearUser } from "../../store/userSlice";
 
 const DeleteAccount = () => {

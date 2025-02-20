@@ -9,7 +9,6 @@ import { timeAgo } from "../../../utils/formatTime";
 import { SlOptionsVertical } from "react-icons/sl";
 import { useNavigate } from "react-router-dom";
 import { FaSave } from "react-icons/fa";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 

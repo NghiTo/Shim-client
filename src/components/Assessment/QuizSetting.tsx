@@ -8,7 +8,6 @@ import { QuizResponse, quizSetting } from "../../types/quiz.type";
 import { useMutation, useQueryClient } from "react-query";
 import { updateQuiz } from "../../apis/quiz.api";
 import { FaCamera } from "react-icons/fa6";
-import { toast } from "react-toastify";
 import { checkImage, readAsBase64 } from "../../utils/checkImage";
 
 interface QuizSettingProps {
