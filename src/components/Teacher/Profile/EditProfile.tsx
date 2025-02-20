@@ -1,15 +1,18 @@
-import { Modal, Select } from "antd";
-import React, { useEffect } from "react";
+import { Button, Form, Input, message, Modal, Select } from "antd";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 import { RootState } from "../../../store/store";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { updateSchema } from "../../../schemas/userSchema";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { UserProfile, UserResponse } from "../../../types/user.type";
 import { useMutation, useQueryClient } from "react-query";
 import { updateUser } from "../../../apis/user.api";
-import { gradeOptions, subjectOptions, titleOptions } from "../../../constants/constants";
+import {
+  gradeOptions,
+  subjectOptions,
+  titleOptions,
+} from "../../../constants/constants";
+import { AxiosError } from "axios";
 
 interface EditProfileProps {
   data?: UserResponse;
@@ -26,129 +29,100 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const queryClient = useQueryClient();
   const user = useSelector((state: RootState) => state.user);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm<UserProfile>({
-    resolver: yupResolver(updateSchema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-    defaultValues: {
-      title: data?.title,
-      firstName: data?.firstName,
-      lastName: data?.lastName,
-      subject: data?.subject,
-      grade: data?.grade,
-    },
-  });
-
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (data: UserProfile) => updateUser(user.id, data),
     {
-      onError: (err) => {
-        console.log(err);
+      onError: (err: AxiosError) => {
+        const errorMessage = (err.response?.data as { message: string })
+          ?.message;
+        message.error(errorMessage || "Something went wrong");
       },
       onSuccess: () => {
         queryClient.invalidateQueries(["userInfo", user.id]);
+        message.success("Update profile successfully");
         setIsModalOpen(false);
       },
     }
   );
-
-  const onSubmit: SubmitHandler<UserProfile> = (formData) => {
-    mutate(formData);
-  };
-
-  useEffect(() => {
-    if (data) {
-      reset({
-        title: data.title,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        subject: data.subject,
-        grade: data.grade,
-      });
-    }
-  }, [data, reset]);
 
   return (
     <Modal
       open={isModalOpen}
       title="Edit Profile"
       okText="Save"
+      centered
       width={700}
+      footer={
+        <Button
+          type="primary"
+          htmlType="submit"
+          form="update-profile"
+          loading={isLoading}
+        >
+          Save
+        </Button>
+      }
       onCancel={() => {
         if (!data?.title || !data?.subject || !data?.grade) {
-          return
+          return;
         }
         setIsModalOpen(false);
       }}
-      onOk={handleSubmit(onSubmit)}
     >
-      <div className="flex flex-col gap-4">
+      <Form
+        onFinish={(data: UserProfile) => mutate(data)}
+        id="update-profile"
+        layout="vertical"
+        initialValues={{
+          title: data?.title,
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+          grade: data?.grade,
+          subject: data?.subject,
+        }}
+      >
         <div className="flex flex-row gap-2 w-full">
-          <div className="w-1/5">
-            <p>Title</p>
-            <Select
-              {...register("title")}
-              defaultValue={data?.title}
-              className="w-full"
-              onChange={(value) => setValue("title", value)}
-              options={titleOptions}
-            ></Select>
-            {errors.title && (
-              <p className="text-red-500">{errors.title.message}</p>
-            )}
-          </div>
-          <div className="w-full">
-            <p>First Name</p>
-            <input
-              {...register("firstName")}
-              className="border w-full border-gray-500 outline-none rounded-lg p-1"
-              type="text"
-              defaultValue={data?.firstName as string}
-            />
-          </div>
-          <div className="w-full">
-            <p>Last Name</p>
-            <input
-              {...register("lastName")}
-              type="text"
-              className="border w-full border-gray-500 outline-none rounded-lg p-1"
-              defaultValue={data?.lastName as string}
-            />
-          </div>
+          <Form.Item<UserProfile>
+            label="Title"
+            name={"title"}
+            className="w-1/5"
+            rules={updateSchema.title}
+          >
+            <Select className="w-full" options={titleOptions}></Select>
+          </Form.Item>
+          <Form.Item<UserProfile>
+            name={"firstName"}
+            label="First name"
+            className="w-full"
+          >
+            <Input className="border w-full border-gray-500" type="text" />
+          </Form.Item>
+          <Form.Item<UserProfile>
+            label="Last name"
+            name={"lastName"}
+            className="w-full"
+            rules={updateSchema.lastName}
+          >
+            <Input type="text" className="border w-full border-gray-500" />
+          </Form.Item>
         </div>
         <div className="flex flex-row gap-2">
-          <div className="w-1/6">
-            <p>Grade</p>
-            <Select
-              {...register("grade")}
-              defaultValue={data?.grade}
-              className="w-full"
-              onChange={(value) => setValue("grade", value)}
-              options={gradeOptions}
-            ></Select>
-            {errors.grade && (
-              <p className="text-red-500">{errors.grade.message}</p>
-            )}
-          </div>
-          <div className="w-1/3">
-            <p>Subject</p>
-            <Select
-              {...register("subject")}
-              defaultValue={data?.subject}
-              className="w-full"
-              onChange={(value) => setValue("subject", value)}
-              options={subjectOptions}
-            ></Select>
-            {errors.subject && (
-              <p className="text-red-500">{errors.subject.message}</p>
-            )}
-          </div>
+          <Form.Item<UserProfile>
+            label="Grade"
+            name={"grade"}
+            className="w-1/6"
+            rules={updateSchema.grade}
+          >
+            <Select className="w-full" options={gradeOptions}></Select>
+          </Form.Item>
+          <Form.Item<UserProfile>
+            label="Subject"
+            name={"subject"}
+            className="w-1/3"
+            rules={updateSchema.subject}
+          >
+            <Select className="w-full" options={subjectOptions}></Select>
+          </Form.Item>
         </div>
         <div>
           <p>School</p>
@@ -161,6 +135,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
                 data?.school.country}
             </p>
             <button
+              type="button"
               onClick={() => {
                 setIsModalOpen(false);
                 dispatch(setUser({ ...user, schoolId: "" }));
@@ -171,7 +146,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
             </button>
           </div>
         </div>
-      </div>
+      </Form>
     </Modal>
   );
 };

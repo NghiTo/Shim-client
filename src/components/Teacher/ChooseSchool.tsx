@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import { IoSearch } from "react-icons/io5";
 import { useInfiniteQuery, useMutation, useQueryClient } from "react-query";
 import { getSchools } from "../../apis/school.api";
@@ -18,7 +18,7 @@ const ChooseSchool = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery(
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery(
     "schools",
     ({ pageParam = 1 }) => getSchools(pageParam, 6),
     {
@@ -27,7 +27,7 @@ const ChooseSchool = () => {
           ? lastPage.pagination.currentPage + 1
           : false;
       },
-      enabled: !user.schoolId
+      enabled: !user.schoolId,
     }
   );
 
@@ -36,6 +36,7 @@ const ChooseSchool = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries("userInfo");
+        message.success("Update school successfully");
       },
     }
   );
@@ -66,7 +67,8 @@ const ChooseSchool = () => {
       onOk={handleSave}
       closable={false}
       okText="Save"
-      className="top-10"
+      loading={isLoading}
+      centered
       cancelButtonProps={{ style: { display: "none" } }}
       okButtonProps={{ disabled: !selectedSchool }}
     >

@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import { FaUserEdit } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import { UserResponse } from "../../../types/user.type";
-import { Skeleton, Tabs, TabsProps } from "antd";
+import { message, Skeleton, Tabs, TabsProps } from "antd";
 import Library from "./Library";
 
 const items: TabsProps["items"] = [
@@ -51,7 +51,7 @@ const Profile = () => {
       onSuccess: (res) => {
         if (res && (!res.title || !res.grade || !res.subject)) {
           setIsModalOpen(true);
-          toast.info("Please complete your profile");
+          message.info("Please complete your profile");
         }
       },
     }
@@ -70,10 +70,11 @@ const Profile = () => {
       onError: (err: AxiosError) => {
         const errorMessage = (err.response?.data as { message: string })
           ?.message;
-        toast.error(errorMessage || "Something went wrong");
+        message.error(errorMessage || "Something went wrong");
       },
       onSuccess: (res) => {
         queryClient.invalidateQueries("userInfo");
+        message.success("Update profile successfully");
         dispatch(setUser({ ...user, avatarUrl: res.data.avatarUrl }));
       },
     }

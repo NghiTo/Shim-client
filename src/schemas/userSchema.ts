@@ -68,13 +68,13 @@ export const loginSchema = {
   ] as Rule[],
 };
 
-export const updateSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required"),
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  grade: Yup.string().required("Grade is required"),
-  subject: Yup.string().required("Subject is required"),
-});
+export const updateSchema = {
+  title: [{ required: true, message: "Title is required" }],
+  grade: [{ required: true, message: "Grade is required" }],
+  subject: [{ required: true, message: "Subject is required" }],
+  firstName: [{ required: true, message: "First name is required" }],
+  lastName: [{ required: true, message: "Last name is required" }],
+};
 
 export const passwordSchema = Yup.object().shape({
   oldPassword: Yup.string()
