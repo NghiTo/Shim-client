@@ -1,30 +1,18 @@
-import { Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import { StudentRegisterForm } from "../../types/user.type";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { studentRegisterSchema } from "../../schemas/userSchema";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { createUser } from "../../apis/user.api";
 import { setUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 const StudentRegister = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    clearErrors,
-    watch,
-  } = useForm<StudentRegisterForm>({
-    resolver: yupResolver(studentRegisterSchema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-  });
+  const [form] = Form.useForm();
+  const [isFormFilled, setIsFormFilled] = useState(false);
 
   const { mutate: create } = useMutation(createUser, {
     onSuccess: (res) => {
@@ -42,18 +30,12 @@ const StudentRegister = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<StudentRegisterForm> = (data) => {
+  const onSubmit = (data: StudentRegisterForm) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...userData } = data;
     const email = localStorage.getItem("email") as string;
     create({ ...userData, role: "student", email });
   };
-
-  const firstName = watch("firstName");
-  const lastName = watch("lastName");
-  const password = watch("password");
-  const confirmPassword = watch("confirmPassword");
-  const isFormFilled = firstName && lastName && password && confirmPassword;
 
   return (
     <div className="bg-gray-100 w-1/3 min-h-full mx-auto rounded-lg flex flex-col gap-8 max-md:w-full p-8">
@@ -63,14 +45,28 @@ const StudentRegister = () => {
         </h1>
         <p>Signing up as student</p>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <div className="w-1/4">
-          <p>Grade</p>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onSubmit}
+        onValuesChange={(_, allValues) => {
+          const { grade, firstName, lastName, confirmPassword, password } =
+            allValues;
+          if (grade && firstName && lastName && confirmPassword && password) {
+            setIsFormFilled(true);
+          } else {
+            setIsFormFilled(false);
+          }
+        }}
+      >
+        <Form.Item<StudentRegisterForm>
+          label="Grade"
+          name={"grade"}
+          className="w-1/4"
+          rules={studentRegisterSchema.grade}
+        >
           <Select
-            {...register("grade")}
-            defaultValue={"--"}
             className="w-full"
-            onChange={(value) => setValue("grade", value)}
             options={[
               { value: "1st", label: "1st" },
               { value: "2nd", label: "2nd" },
@@ -86,74 +82,60 @@ const StudentRegister = () => {
               { value: "12th", label: "12th" },
             ]}
           ></Select>
-        </div>
-        <div>
-          <p>First name</p>
-          <input
-            {...register("firstName", {
-              onChange: () => clearErrors("firstName"),
-            })}
+        </Form.Item>
+        <Form.Item<StudentRegisterForm>
+          name="firstName"
+          label="First name"
+          rules={studentRegisterSchema.firstName}
+        >
+          <Input
             type="text"
-            className="w-full py-2 px-3 rounded-md border border-gray-500 outline-none"
-            placeholder="Shim"
+            className="w-full py-2 px-3 rounded-md"
+            placeholder="Enter your first name"
           />
-          {errors.firstName && (
-            <p className="text-red-500">{errors.firstName.message}</p>
-          )}
-        </div>
-        <div>
-          <p>Last name</p>
-          <input
-            {...register("lastName", {
-              onChange: () => clearErrors("lastName"),
-            })}
+        </Form.Item>
+        <Form.Item<StudentRegisterForm>
+          label="Last name"
+          name={"lastName"}
+          rules={studentRegisterSchema.lastName}
+        >
+          <Input
             type="text"
-            className="w-full py-2 px-3 rounded-md border border-gray-500 outline-none"
-            placeholder="nek"
+            className="w-full py-2 px-3 rounded-md"
+            placeholder="Enter your last name"
           />
-          {errors.lastName && (
-            <p className="text-red-500">{errors.lastName.message}</p>
-          )}
-        </div>
-        <div>
-          <p>Password</p>
-          <input
-            {...register("password", {
-              onChange: () => clearErrors("password"),
-            })}
+        </Form.Item>
+        <Form.Item<StudentRegisterForm>
+          name={"password"}
+          label="Password"
+          rules={studentRegisterSchema.password}
+        >
+          <Input.Password
             type="password"
-            className="w-full py-2 px-3 rounded-md border border-gray-500 outline-none"
+            className="w-full py-2 px-3 rounded-md"
             placeholder="*******"
           />
-          {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
-          )}
-        </div>
-        <div>
-          <p>Confirm Password</p>
-          <input
-            {...register("confirmPassword", {
-              onChange: () => clearErrors("confirmPassword"),
-            })}
+        </Form.Item>
+        <Form.Item
+          label="Confirm Password"
+          name={"confirmPassword"}
+          rules={studentRegisterSchema.confirmPassword}
+        >
+          <Input.Password
             type="password"
-            className="w-full py-2 px-3 rounded-md border border-gray-500 outline-none"
+            className="w-full py-2 px-3 rounded-md"
             placeholder="*******"
           />
-          {errors.confirmPassword && (
-            <p className="text-red-500">{errors.confirmPassword.message}</p>
-          )}
-        </div>
-        <button
-          type="submit"
-          className={`w-full py-2 rounded-md ${
-            isFormFilled
-              ? "bg-[#fe5f5c] text-white"
-              : "bg-gray-300 text-gray-400"
-          }`}
+        </Form.Item>
+        <Button
+          htmlType="submit"
+          type="primary"
+          className="w-full py-4"
+          disabled={!isFormFilled}
         >
           Continue
-        </button>
-      </form>
+        </Button>
+      </Form>
     </div>
   );
 };

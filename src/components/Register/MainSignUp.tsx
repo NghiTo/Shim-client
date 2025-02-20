@@ -5,7 +5,7 @@ import { findUserByEmail } from "../../apis/user.api";
 import { EmailForm } from "../../types/user.type";
 import { emailSchema } from "../../schemas/userSchema";
 import { FaRegEnvelope } from "react-icons/fa6";
-import { Form, Input, message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 
@@ -14,7 +14,7 @@ const MainSignUp = () => {
   const [form] = useForm();
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const { mutate } = useMutation(findUserByEmail, {
+  const { mutate, isLoading } = useMutation(findUserByEmail, {
     onSuccess: () => {
       message.error("This email address is already registered. Please log in");
     },
@@ -67,17 +67,15 @@ const MainSignUp = () => {
             placeholder="name@example.com"
           />
         </Form.Item>
-        <button
-          type="submit"
+        <Button
+          htmlType="submit"
+          type="primary"
+          loading={isLoading}
           disabled={!isEmailValid}
-          className={`w-full py-2 rounded-md ${
-            isEmailValid
-              ? "bg-[#fe5f5c] text-white"
-              : "bg-gray-300 text-gray-400"
-          }`}
+          className={`w-full py-5 rounded-md`}
         >
           Continue
-        </button>
+        </Button>
       </Form>
       <div className="text-gray-400 mt-2 max-md:hidden">
         By signing up, you agree to our{" "}
