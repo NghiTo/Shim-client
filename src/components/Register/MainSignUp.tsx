@@ -4,44 +4,31 @@ import { Link, useNavigate } from "react-router-dom";
 import { findUserByEmail } from "../../apis/user.api";
 import { EmailForm } from "../../types/user.type";
 import { emailSchema } from "../../schemas/userSchema";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { FaRegEnvelope } from "react-icons/fa6";
+import { Form, Input, message } from "antd";
+import { useState } from "react";
+import { useForm } from "antd/es/form/Form";
 
 const MainSignUp = () => {
   const navigate = useNavigate();
-
-  const {
-    register,
-    clearErrors,
-    formState: { errors },
-    handleSubmit,
-    watch,
-  } = useForm<EmailForm>({
-    resolver: yupResolver(emailSchema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-  });
+  const [form] = useForm();
+  const [isEmailValid, setIsEmailValid] = useState(false);
 
   const { mutate } = useMutation(findUserByEmail, {
     onSuccess: () => {
-      toast.error("This email address is already registered. Please log in");
+      message.error("This email address is already registered. Please log in");
     },
     onError: (error: AxiosError) => {
       if (error.response?.status === 404) {
-        const email = watch("email");
-        localStorage.setItem("email", email);
+        localStorage.setItem("email", form.getFieldValue("email"));
         navigate("/signup/occupation");
       } else {
-        toast.error("An error occurred while checking the email address");
+        message.error("An error occurred while checking the email address");
       }
     },
   });
 
-  const emailValue = watch("email");
-  const isEmailValid = emailValue && emailValue.length > 0;
-
-  const onSubmit: SubmitHandler<EmailForm> = (data) => {
+  const onSubmit = (data: EmailForm) => {
     mutate(data.email);
   };
 
@@ -51,27 +38,35 @@ const MainSignUp = () => {
       <h1 className="text-gray-600 text-xl">
         Create a free account in 2 steps
       </h1>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 pb-4 mt-4"
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onSubmit}
+        className="pb-4 mt-4"
+        onValuesChange={(_, allValues) => {
+          const { email } = allValues;
+          if (email) {
+            setIsEmailValid(true);
+          } else {
+            setIsEmailValid(false);
+          }
+        }}
       >
-        <div>
-          <p>Enter email address</p>
-          <div className="py-2 px-4 border-2 border-gray-300 rounded-md flex flex-row items-center gap-4 focus-within:border-[#fe5f5c] focus-within:border-2">
-            <FaRegEnvelope className="text-gray-400" />
-            <input
-              {...register("email", { onChange: () => clearErrors("email") })}
-              className="w-full bg-gray-100 max-md:bg-white outline-none"
-              type="text"
-              name="email"
-              id="email"
-              placeholder="name@example.com"
-            />
-          </div>
-          {errors.email && (
-            <span className="text-red-600 text-sm">{errors.email.message}</span>
-          )}
-        </div>
+        <Form.Item<EmailForm>
+          label="Email"
+          name={"email"}
+          className=""
+          rules={emailSchema}
+        >
+          <Input
+            prefix={<FaRegEnvelope />}
+            className="w-full bg-gray-100 max-md:bg-white py-2"
+            type="text"
+            name="email"
+            id="email"
+            placeholder="name@example.com"
+          />
+        </Form.Item>
         <button
           type="submit"
           disabled={!isEmailValid}
@@ -83,7 +78,7 @@ const MainSignUp = () => {
         >
           Continue
         </button>
-      </form>
+      </Form>
       <div className="text-gray-400 mt-2 max-md:hidden">
         By signing up, you agree to our{" "}
         <Link to={""} className="underline">

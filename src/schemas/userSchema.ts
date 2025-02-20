@@ -1,11 +1,10 @@
 import { Rule } from "antd/es/form";
 import * as Yup from "yup";
 
-export const emailSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-});
+export const emailSchema: Rule[] = [
+  { required: true, message: "Email is required" },
+  { type: "email", message: "Invalid email address" },
+];
 
 export const registerSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
