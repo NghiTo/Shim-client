@@ -18,9 +18,9 @@ const Teacher = () => {
   return (
     <div className="flex flex-row">
       <ChooseSchool />
-      <CreatePassword/>
+      <CreatePassword />
       <SideBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full border-l border-gray-400">
         <NavBar selectedKeys={selectedKeys} setSelectedKeys={setSelectedKeys} />
         <Outlet />
       </div>

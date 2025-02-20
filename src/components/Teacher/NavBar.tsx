@@ -103,7 +103,7 @@ const NavBar: React.FC<NavBarProps> = ({ selectedKeys, setSelectedKeys }) => {
   }, []);
 
   return (
-    <div className="flex flex-row justify-end sticky top-0 bg-white items-center w-full py-2 px-4 gap-2 border-b border-gray-400">
+    <div className="flex flex-row justify-end sticky z-10 top-0 bg-white items-center w-full py-2 px-4 gap-2 border-b border-gray-400">
       <IoMdMenu
         className="mr-auto text-2xl cursor-pointer md:hidden"
         onClick={() => setOpen(true)}

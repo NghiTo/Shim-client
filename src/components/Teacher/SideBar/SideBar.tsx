@@ -69,7 +69,7 @@ const SideBar: React.FC<SideBarProps> = ({ selectedKeys, setSelectedKeys }) => {
   }, [location.pathname, setSelectedKeys]);
 
   return (
-    <div className="border-r border-gray-400 sticky top-0 w-1/5 py-2 flex flex-col gap-2 min-h-screen max-md:hidden">
+    <div className="sticky top-0 w-1/5 py-2 flex flex-col gap-2 h-screen max-md:hidden">
       <img
         src="/src/assets/z6005140779869_f6c7fcbf20895c41056a882bae49e05d.jpg"
         alt="Logo"

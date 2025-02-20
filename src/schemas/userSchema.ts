@@ -1,5 +1,4 @@
 import { Rule } from "antd/es/form";
-import * as Yup from "yup";
 
 export const emailSchema: Rule[] = [
   { required: true, message: "Email is required" },
@@ -76,25 +75,42 @@ export const updateSchema = {
   lastName: [{ required: true, message: "Last name is required" }],
 };
 
-export const passwordSchema = Yup.object().shape({
-  oldPassword: Yup.string()
-    .required("Please enter your current password")
-    .min(6, "Password must have at least 6 characters!"),
-  newPassword: Yup.string()
-    .required("Please enter a new password!")
-    .min(6, "Password must have at least 6 characters!")
-    .test(
-      "not-same-as-old-password",
-      "New password cannot be the same as the old password",
-      function (value) {
-        const { oldPassword } = this.parent;
-        return value !== oldPassword;
-      }
-    ),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("newPassword")], "Password must match")
-    .required("Please confirm your new password"),
-});
+export const passwordSchema = {
+  oldPassword: [
+    {
+      required: true,
+      message: "Please enter a password!",
+    },
+    {
+      min: 6,
+      message: "Password must have at least 6 characters!",
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "Please enter a password!",
+    },
+    {
+      min: 6,
+      message: "Password must have at least 6 characters!",
+    },
+  ],
+  confirmPassword: [
+    {
+      required: true,
+      message: "Please confirm your password",
+    },
+    ({ getFieldValue }) => ({
+      validator(_, value) {
+        if (!value || getFieldValue("password") === value) {
+          return Promise.resolve();
+        }
+        return Promise.reject(new Error("Password do not match!"));
+      },
+    }),
+  ] as Rule[],
+};
 
 export const studentRegisterSchema = {
   grade: [{ required: true, message: "Grade is required" }],
