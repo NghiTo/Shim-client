@@ -1,4 +1,4 @@
-import { Modal, Select } from "antd";
+import { message, Modal, Select } from "antd";
 import defaultImg from "/src/assets/logo_placeholder_sm.png";
 import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import { updateQuiz } from "../../apis/quiz.api";
 import { FaCamera } from "react-icons/fa6";
 import { checkImage, readAsBase64 } from "../../utils/checkImage";
 import { subjectOptions } from "../../constants/constants";
+import { onError } from "../../constants/onError";
 
 interface QuizSettingProps {
   quiz: QuizResponse;
@@ -33,9 +34,7 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
         queryClient.invalidateQueries(["quiz", quiz.id]);
         setOpenSetting(false);
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
@@ -61,10 +60,10 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
           }
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
-          toast.error("Failed to process the image");
+          message.error("Failed to process the image");
         }
       } else {
-        toast.error("Invalid image format");
+        message.error("Invalid image format");
       }
     }
   };

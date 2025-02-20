@@ -12,7 +12,7 @@ import {
   subjectOptions,
   titleOptions,
 } from "../../../constants/constants";
-import { AxiosError } from "axios";
+import { onError } from "../../../constants/onError";
 
 interface EditProfileProps {
   data?: UserResponse;
@@ -32,11 +32,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const { mutate, isLoading } = useMutation(
     (data: UserProfile) => updateUser(user.id, data),
     {
-      onError: (err: AxiosError) => {
-        const errorMessage = (err.response?.data as { message: string })
-          ?.message;
-        message.error(errorMessage || "Something went wrong");
-      },
+      onError: onError,
       onSuccess: () => {
         queryClient.invalidateQueries(["userInfo", user.id]);
         message.success("Update profile successfully");

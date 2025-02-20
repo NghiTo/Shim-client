@@ -51,7 +51,6 @@ const District = () => {
     );
   }
 
-  // Tính tổng số giáo viên trong tất cả các trang
   const totalTeachers = data?.pages.reduce(
     (total, page) => total + page.data.length,
     0
@@ -60,7 +59,11 @@ const District = () => {
   return (
     <div className="bg-gray-100 p-8 max-md:py-8 max-md:px-0 max-md:min-h-screen h-full flex flex-col gap-2">
       <h1 className="text-2xl font-semibold max-md:ml-2">
-        {(res?.data as School)?.name}
+        {!isLoading ? (
+          (res?.data as School)?.name
+        ) : (
+          <Skeleton.Button className="w-48" active></Skeleton.Button>
+        )}
       </h1>
       <div className="rounded-xl bg-white p-8 max-md:p-4 flex flex-col gap-4 max-md:gap-2">
         <div className="flex flex-row w-full">

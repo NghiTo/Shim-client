@@ -1,37 +1,21 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "antd";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { emailSchema } from "../../schemas/userSchema";
 import { EmailForm } from "../../types/user.type";
 import { useMutation } from "react-query";
 import { forgotPassword } from "../../apis/auth.api";
+import { onError } from "../../constants/onError";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<EmailForm>({
-    resolver: yupResolver(emailSchema),
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
-  });
-
   const { mutate, isLoading } = useMutation(forgotPassword, {
     onSuccess: () => {
-      toast.info("A verification email has been sent to your email");
+      message.info("A verification email has been sent to your email");
     },
-    onError: () => {
-      toast.error("An error has occurred");
-    },
+    onError: onError,
   });
 
-  const onSubmit: SubmitHandler<EmailForm> = (data) => {
-    mutate(data.email);
-  };
   return (
     <div className="min-h-screen flex relative">
       <img
@@ -39,8 +23,9 @@ const ForgotPassword = () => {
         alt=""
         className="absolute w-1/12 top-4 left-4 max-md:w-1/5"
       />
-      <form
-        onSubmit={handleSubmit(onSubmit)}
+      <Form
+        layout="vertical"
+        onFinish={(data: EmailForm) => mutate(data.email)}
         className="bg-gray-100 m-auto p-8 max-md:w-full w-2/5 rounded-lg flex flex-col gap-4"
       >
         <h1 className="font-semibold text-2xl">Forgot your password</h1>
@@ -49,18 +34,13 @@ const ForgotPassword = () => {
           Your password will be reseted. Please enter your main email for this
           account.
         </div>
-        <div>
-          <p>Enter your email</p>
-          <input
-            {...register("email")}
+        <Form.Item label="Enter your email" name={"email"} rules={emailSchema}>
+          <Input
             type="text"
             placeholder="Start typing..."
-            className="p-2 outline-none border border-gray-400 rounded-md w-full focus:border-[#fe5f5c]"
+            className="p-2 w-full"
           />
-          {errors.email && (
-            <span className="text-red-500">{errors.email.message}</span>
-          )}
-        </div>
+        </Form.Item>
         <div className="w-full flex flex-row gap-2">
           <Button
             type="default"
@@ -78,7 +58,7 @@ const ForgotPassword = () => {
             Continue
           </Button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, Button, Input } from "antd";
+import { Modal, Button, Input, message } from "antd";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -14,6 +14,7 @@ import {
   updateQuestion,
 } from "../../../apis/quiz.api";
 import { useParams } from "react-router-dom";
+import { onError } from "../../../constants/onError";
 
 interface FillInTheBlankProps {
   open: boolean;
@@ -71,10 +72,9 @@ const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
         closeModal();
+        message.success("Quiz created successfully");
       },
-      onError: () => {
-        toast.error("Error creating question:");
-      },
+      onError: onError,
     }
   );
 
@@ -86,9 +86,7 @@ const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
         queryClient.invalidateQueries(["quiz", quizId]);
         closeModal();
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
@@ -104,13 +102,18 @@ const FillInTheBlank: React.FC<FillInTheBlankProps> = ({
     <Modal
       open={open}
       onCancel={closeModal}
-      className="top-20"
+      centered
       title="Fill in the Blank Question"
       footer={[
         <Button key="cancel" onClick={closeModal}>
           Cancel
         </Button>,
-        <Button key="save" type="primary" loading={isLoading} onClick={handleSubmit(onSubmit)}>
+        <Button
+          key="save"
+          type="primary"
+          loading={isLoading}
+          onClick={handleSubmit(onSubmit)}
+        >
           Save
         </Button>,
       ]}

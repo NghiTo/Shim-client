@@ -8,12 +8,12 @@ import { checkImage, readAsBase64 } from "../../../utils/checkImage";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 import { RootState } from "../../../store/store";
-import { AxiosError } from "axios";
 import { FaUserEdit } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import { UserResponse } from "../../../types/user.type";
 import { message, Skeleton, Tabs, TabsProps } from "antd";
 import Library from "./Library";
+import { onError } from "../../../constants/onError";
 
 const items: TabsProps["items"] = [
   {
@@ -67,11 +67,7 @@ const Profile = () => {
     (avatarUrl: string | ArrayBuffer) =>
       updateUser(user.id as string, { avatarUrl }),
     {
-      onError: (err: AxiosError) => {
-        const errorMessage = (err.response?.data as { message: string })
-          ?.message;
-        message.error(errorMessage || "Something went wrong");
-      },
+      onError: onError,
       onSuccess: (res) => {
         queryClient.invalidateQueries("userInfo");
         message.success("Update profile successfully");

@@ -1,4 +1,4 @@
-import { Modal, Select } from "antd";
+import { message, Modal, Select } from "antd";
 import { memo, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UserUpdate } from "../../../types/user.type";
@@ -6,6 +6,7 @@ import { updateUser } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { gradeOptions } from "../../../constants/constants";
+import { onError } from "../../../constants/onError";
 
 interface GradeModalProps {
   open: boolean;
@@ -21,10 +22,11 @@ const GradeModal: React.FC<GradeModalProps> = ({ open, setOpen, grade }) => {
     (data: UserUpdate) => updateUser(user.id, data),
     {
       onSuccess: () => {
-        toast.success("Grade updated successfully");
+        message.success("Grade updated successfully");
         queryClient.invalidateQueries(["studentProfile", user.id]);
         setOpen(false);
       },
+      onError: onError,
     }
   );
   return (

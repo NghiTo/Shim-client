@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Input, Button, Radio, Space } from "antd";
+import { Modal, Input, Button, Radio, Space, message } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import {
   Controller,
@@ -20,6 +20,7 @@ import {
   createMultipleChoiceQuestion,
   updateQuestion,
 } from "../../../apis/quiz.api";
+import { onError } from "../../../constants/onError";
 
 interface MultipleChoiceProps {
   open: boolean;
@@ -64,13 +65,12 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
+        message.success("Quiz created successfully");
         reset();
         setCorrectAnswer(0);
         closeModal();
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
@@ -80,13 +80,12 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
+        message.success("Quiz updated successfully");
         reset();
         setCorrectAnswer(0);
         closeModal();
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
@@ -129,7 +128,7 @@ const MultipleChoice: React.FC<MultipleChoiceProps> = ({
         setCorrectAnswer(0);
         closeModal();
       }}
-      style={{ top: "8%" }}
+      centered
       onOk={handleSubmit(onSubmit)}
       title="Multiple Choice Question"
     >

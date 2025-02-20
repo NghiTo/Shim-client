@@ -1,4 +1,4 @@
-import { Button, Dropdown, MenuProps, Skeleton } from "antd";
+import { Button, Dropdown, message, Skeleton } from "antd";
 import {
   FaArrowLeft,
   FaChartBar,
@@ -30,44 +30,8 @@ import MultipleChoice from "./MultipleChoice/MultipleChoice";
 import FillInTheBlank from "./FillInTheBlank/FillInTheBlank";
 import { addSuffix, convertCamelCaseToTitleCase } from "../../utils/formatText";
 import OpenEnded from "./OpenEnded/OpenEnded";
-
-const itemsTime: MenuProps["items"] = [
-  { label: "5 seconds", key: "5" },
-  { label: "10 seconds", key: "10" },
-  { label: "20 seconds", key: "20" },
-  { label: "30 seconds", key: "30" },
-  { label: "45 seconds", key: "45" },
-  { label: "1 minute", key: "60" },
-  { label: "1.5 minutes", key: "90" },
-  { label: "2 minutes", key: "120" },
-  { label: "3 minutes", key: "180" },
-  { label: "5 minutes", key: "300" },
-  { label: "10 minutes", key: "600" },
-  { label: "15 minutes", key: "900" },
-];
-
-const itemsPoint: MenuProps["items"] = [
-  { label: "1 point", key: "1" },
-  { label: "2 points", key: "2" },
-  { label: "3 points", key: "3" },
-  { label: "4 points", key: "4" },
-  { label: "5 points", key: "5" },
-  { label: "6 points", key: "6" },
-  { label: "7 points", key: "7" },
-  { label: "8 points", key: "8" },
-  { label: "9 points", key: "9" },
-  { label: "10 points", key: "10" },
-  { label: "11 points", key: "11" },
-  { label: "12 points", key: "12" },
-  { label: "13 points", key: "13" },
-  { label: "14 points", key: "14" },
-  { label: "15 points", key: "15" },
-  { label: "16 points", key: "16" },
-  { label: "17 points", key: "17" },
-  { label: "18 points", key: "18" },
-  { label: "19 points", key: "19" },
-  { label: "20 points", key: "20" },
-];
+import { itemsPoint, itemsTime } from "../../constants/constants";
+import { onError } from "../../constants/onError";
 
 const questionTypes = [
   { label: "multipleChoice", icon: <FaCheck />, color: "#8854c0" },
@@ -103,7 +67,13 @@ const CreateQuiz = () => {
   });
 
   const { mutate: publishQuiz, isLoading: publishLoading } = useMutation(
-    (status: string) => updateQuiz(quizId as string, { status })
+    (status: string) => updateQuiz(quizId as string, { status }),
+    {
+      onSuccess: () => {
+        message.success("Quiz published");
+      },
+      onError: onError,
+    }
   );
 
   const { mutate: mutateAll } = useMutation(
@@ -111,19 +81,15 @@ const CreateQuiz = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
-        toast.success("All questions updated successfully", {
-          position: "bottom-left",
-        });
+        message.success("All questions updated successfully");
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
   const handleDropdownClick = (type: "time" | "point", e: { key: string }) => {
     if (quiz.data.questions.length === 0) {
-      toast.info("Please create a new question");
+      message.info("Please create a new question");
       return;
     }
     mutateAll({ [type]: parseInt(e.key) });
@@ -135,7 +101,7 @@ const CreateQuiz = () => {
       return;
     }
     if (quiz.data.questions.length < 1) {
-      toast.error("Quiz must have at least 1 question");
+      message.error("Quiz must have at least 1 question");
       return;
     }
     publishQuiz("finished");

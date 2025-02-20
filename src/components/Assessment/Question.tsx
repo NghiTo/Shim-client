@@ -1,4 +1,10 @@
-import { Dropdown, MenuProps, Popconfirm, PopconfirmProps } from "antd";
+import {
+  Dropdown,
+  MenuProps,
+  message,
+  Popconfirm,
+  PopconfirmProps,
+} from "antd";
 import React from "react";
 import { FaCheck, FaTrash } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
@@ -14,6 +20,7 @@ import { deleteQuestion, updateQuestion } from "../../apis/quiz.api";
 import { useParams } from "react-router-dom";
 import { formatTime } from "../../utils/formatTime";
 import { convertCamelCaseToTitleCase } from "../../utils/formatText";
+import { onError } from "../../constants/onError";
 
 const itemsTime: MenuProps["items"] = [
   { label: "5 seconds", key: "5" },
@@ -66,13 +73,9 @@ const Question: React.FC<QuestionProps> = ({ question, onEdit }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
-        toast.success("Question deleted successfully", {
-          position: "bottom-left",
-        });
+        message.success("Question deleted successfully");
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 
@@ -86,13 +89,9 @@ const Question: React.FC<QuestionProps> = ({ question, onEdit }) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["quiz", quizId]);
-        toast.success("Question updated successfully", {
-          position: "bottom-left",
-        });
+        message.success("Question updated successfully");
       },
-      onError: (err) => {
-        toast.error(err as string);
-      },
+      onError: onError,
     }
   );
 

@@ -1,13 +1,13 @@
-import { Modal } from "antd";
+import { Button, Form, Input, message, Modal } from "antd";
 import React, { memo } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { PasswordForm, UserPassword } from "../../../types/user.type";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { passwordSchema } from "../../../schemas/userSchema";
 import { useMutation } from "react-query";
 import { changePassword } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import { useForm } from "antd/es/form/Form";
+import { onError } from "../../../constants/onError";
 
 interface PasswordModalProps {
   open: boolean;
@@ -16,32 +16,21 @@ interface PasswordModalProps {
 
 const PasswordModal: React.FC<PasswordModalProps> = ({ open, setOpen }) => {
   const user = useSelector((state: RootState) => state.user);
-  const {
-    register,
-    clearErrors,
-    handleSubmit,
-    reset,
-    setError,
-    formState: { errors },
-  } = useForm<PasswordForm>({
-    resolver: yupResolver(passwordSchema),
-  });
+  const [form] = useForm();
 
   const { mutate, isLoading } = useMutation(
     (data: UserPassword) => changePassword(user.id, data),
     {
       onSuccess: () => {
-        toast.success("Password changed successfully");
-        reset();
+        message.success("Password changed successfully");
+        form.resetFields();
         setOpen(false);
       },
-      onError: () => {
-        setError("oldPassword", { message: "Current password is incorrect" });
-      },
+      onError: onError,
     }
   );
 
-  const onSubmit: SubmitHandler<PasswordForm> = (data) => {
+  const onSubmit = (data: PasswordForm) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...newData } = data;
     mutate(newData);
@@ -49,61 +38,62 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, setOpen }) => {
   return (
     <Modal
       open={open}
-      onOk={handleSubmit(onSubmit)}
       onCancel={() => setOpen(false)}
       title="Update password"
-      confirmLoading={isLoading}
+      footer={
+        <>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button
+            loading={isLoading}
+            type="primary"
+            htmlType="submit"
+            form="change-password"
+          >
+            Save
+          </Button>
+        </>
+      }
     >
-      <div className="flex flex-col gap-4">
-        <div>
-          <p>Current password</p>
-          <input
-            {...register("oldPassword", {
-              onChange: () => clearErrors("oldPassword"),
-            })}
+      <Form
+        form={form}
+        onFinish={onSubmit}
+        id="change-password"
+        layout="vertical"
+      >
+        <Form.Item<PasswordForm>
+          label="Old password"
+          name={"oldPassword"}
+          rules={passwordSchema.oldPassword}
+        >
+          <Input.Password
             type="password"
-            placeholder="Current password"
-            className="outline-none border border-gray-400 rounded-lg p-2 w-full"
+            className="w-full py-2"
+            placeholder="Enter your current password"
           />
-          {errors.oldPassword && (
-            <span className="text-red-600 text-sm">
-              {errors.oldPassword.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <p>New password</p>
-          <input
-            {...register("newPassword", {
-              onChange: () => clearErrors("newPassword"),
-            })}
+        </Form.Item>
+        <Form.Item<PasswordForm>
+          label="New password"
+          name={"newPassword"}
+          rules={passwordSchema.newPassword}
+        >
+          <Input.Password
             type="password"
-            placeholder="New password"
-            className="outline-none border border-gray-400 rounded-lg p-2 w-full"
+            className="w-full py-2"
+            placeholder="Enter new password"
           />
-          {errors.newPassword && (
-            <span className="text-red-600 text-sm">
-              {errors.newPassword.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <p>Confirm password</p>
-          <input
+        </Form.Item>
+        <Form.Item<PasswordForm>
+          label="Confirm new password"
+          name={"confirmPassword"}
+          rules={passwordSchema.confirmPassword}
+        >
+          <Input.Password
             type="password"
-            {...register("confirmPassword", {
-              onChange: () => clearErrors("confirmPassword"),
-            })}
-            placeholder="Confirm password"
-            className="outline-none border border-gray-400 rounded-lg p-2 w-full"
+            className="w-full py-2"
+            placeholder="Confirm your new password"
           />
-          {errors.confirmPassword && (
-            <span className="text-red-600 text-sm">
-              {errors.confirmPassword.message}
-            </span>
-          )}
-        </div>
-      </div>
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

@@ -10,8 +10,8 @@ import { sendOtp } from "../../../apis/auth.api";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { AxiosError } from "axios";
 import { useState } from "react";
+import { onError } from "../../../constants/onError";
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -22,11 +22,7 @@ const Setting = () => {
   const { mutate } = useMutation(
     (data: UserPassword) => changePassword(user.id, data),
     {
-      onError: (err: AxiosError) => {
-        const errorMessage = (err.response?.data as { message: string })
-          ?.message;
-        message.error(errorMessage || "Something went wrong");
-      },
+      onError: onError,
       onSuccess: () => {
         message.success("Password changed successfully");
         form.resetFields();
@@ -39,10 +35,7 @@ const Setting = () => {
       navigate("/delete-account");
       message.info("An OTP has been sent to your email");
     },
-    onError: (err: AxiosError) => {
-      const errorMessage = (err.response?.data as { message: string })?.message;
-      message.error(errorMessage || "Something went wrong");
-    },
+    onError: onError,
   });
 
   const onSubmit = (data: PasswordForm) => {

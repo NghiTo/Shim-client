@@ -14,7 +14,7 @@ import { clearUser } from "../../../store/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordModal from "./PasswordModal";
 import { sendOtp } from "../../../apis/auth.api";
-import { Popconfirm, PopconfirmProps } from "antd";
+import { message, Popconfirm, PopconfirmProps } from "antd";
 
 const StudentSetting = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const StudentSetting = () => {
   const confirm: PopconfirmProps["onConfirm"] = () => {
     sendOtp();
     navigate("/delete-account");
-    toast.info("An OTP has been sent to your email");
+    message.info("An OTP has been sent to your email");
   };
   const { data } = useQuery<UserResponse>({
     queryKey: ["studentProfile", user.id],

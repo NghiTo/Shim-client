@@ -1,10 +1,11 @@
-import { Input, Modal } from "antd";
+import { Input, message, Modal } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { UserUpdate } from "../../../types/user.type";
 import { updateUser } from "../../../apis/user.api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { memo, useState } from "react";
+import { onError } from "../../../constants/onError";
 
 interface LastNameModalProps {
   open: boolean;
@@ -24,10 +25,11 @@ const LastNameModal: React.FC<LastNameModalProps> = ({
     (data: UserUpdate) => updateUser(user.id, data),
     {
       onSuccess: () => {
-        toast.success("Last name updated successfully");
+        message.success("Last name updated successfully");
         queryClient.invalidateQueries(["studentProfile", user.id]);
         setOpen(false);
       },
+      onError: onError,
     }
   );
   return (

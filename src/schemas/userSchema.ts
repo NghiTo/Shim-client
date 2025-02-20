@@ -86,7 +86,7 @@ export const passwordSchema = {
       message: "Password must have at least 6 characters!",
     },
   ],
-  password: [
+  newPassword: [
     {
       required: true,
       message: "Please enter a password!",
@@ -103,7 +103,7 @@ export const passwordSchema = {
     },
     ({ getFieldValue }) => ({
       validator(_, value) {
-        if (!value || getFieldValue("password") === value) {
+        if (getFieldValue("newPassword") === value) {
           return Promise.resolve();
         }
         return Promise.reject(new Error("Password do not match!"));

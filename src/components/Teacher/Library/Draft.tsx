@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deleteQuiz, getAllQuizzes } from "../../../apis/quiz.api";
 import defaultImg from "/src/assets/logo_placeholder_sm.png";
-import { Dropdown, MenuProps, Skeleton } from "antd";
+import { Dropdown, MenuProps, message, Skeleton } from "antd";
 import { QuizResponse } from "../../../types/quiz.type";
 import { MdClass, MdSubject } from "react-icons/md";
 import { FaHeart, FaQuestion, FaTrash } from "react-icons/fa6";
@@ -49,7 +49,7 @@ const Draft = () => {
   const { mutate } = useMutation(deleteQuiz, {
     onSuccess: () => {
       queryClient.invalidateQueries("draft");
-      toast.success("Quiz deleted successfully");
+      message.success("Quiz deleted successfully");
     },
   });
   return (
@@ -91,11 +91,11 @@ const Draft = () => {
                 <p className="text-base font-semibold">{quiz.title}</p>
                 <div className="flex flex-row gap-1 items-center">
                   <MdClass />
-                  <p>{quiz.grade} grade</p>
+                  <p>{quiz.grade || "?"} grade</p>
                 </div>
                 <div className="flex flex-row gap-1 items-center">
                   <MdSubject />
-                  <p>{quiz.subject}</p>
+                  <p>{quiz.subject || "? subject"}</p>
                 </div>
                 <div className="flex flex-row gap-1 items-center">
                   <FaQuestion />
@@ -112,10 +112,10 @@ const Draft = () => {
                     onClick: (e: { key: string }) => {
                       switch (e.key) {
                         case "1":
-                          toast.success("Liked!");
+                          message.success("Liked!");
                           break;
                         case "2":
-                          toast.success("Saved!");
+                          message.success("Saved!");
                           break;
                         case "3":
                           mutate(quiz.id);
