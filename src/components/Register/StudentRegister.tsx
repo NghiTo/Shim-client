@@ -7,6 +7,7 @@ import { setUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { gradeOptions } from "../../constants/constants";
 
 const StudentRegister = () => {
   const dispatch = useDispatch();
@@ -65,23 +66,7 @@ const StudentRegister = () => {
           className="w-1/4"
           rules={studentRegisterSchema.grade}
         >
-          <Select
-            className="w-full"
-            options={[
-              { value: "1st", label: "1st" },
-              { value: "2nd", label: "2nd" },
-              { value: "3rd", label: "3rd" },
-              { value: "4th", label: "4th" },
-              { value: "5th", label: "5th" },
-              { value: "6th", label: "6th" },
-              { value: "7th", label: "7th" },
-              { value: "8th", label: "8th" },
-              { value: "9th", label: "9th" },
-              { value: "10th", label: "10th" },
-              { value: "11th", label: "11th" },
-              { value: "12th", label: "12th" },
-            ]}
-          ></Select>
+          <Select className="w-full" options={gradeOptions}></Select>
         </Form.Item>
         <Form.Item<StudentRegisterForm>
           name="firstName"
@@ -116,7 +101,7 @@ const StudentRegister = () => {
             placeholder="*******"
           />
         </Form.Item>
-        <Form.Item
+        <Form.Item<StudentRegisterForm>
           label="Confirm Password"
           name={"confirmPassword"}
           rules={studentRegisterSchema.confirmPassword}

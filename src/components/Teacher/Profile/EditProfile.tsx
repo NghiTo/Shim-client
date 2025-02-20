@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { UserProfile, UserResponse } from "../../../types/user.type";
 import { useMutation, useQueryClient } from "react-query";
 import { updateUser } from "../../../apis/user.api";
+import { gradeOptions, subjectOptions, titleOptions } from "../../../constants/constants";
 
 interface EditProfileProps {
   data?: UserResponse;
@@ -96,13 +97,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
               defaultValue={data?.title}
               className="w-full"
               onChange={(value) => setValue("title", value)}
-              options={[
-                { value: "Mr", label: "Mr" },
-                { value: "Ms", label: "Ms" },
-                { value: "Mrs", label: "Mrs" },
-                { value: "Dr", label: "Dr" },
-                { value: "Mx", label: "Mx" },
-              ]}
+              options={titleOptions}
             ></Select>
             {errors.title && (
               <p className="text-red-500">{errors.title.message}</p>
@@ -135,20 +130,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
               defaultValue={data?.grade}
               className="w-full"
               onChange={(value) => setValue("grade", value)}
-              options={[
-                { value: "1st", label: "1st" },
-                { value: "2nd", label: "2nd" },
-                { value: "3rd", label: "3rd" },
-                { value: "4th", label: "4th" },
-                { value: "5th", label: "5th" },
-                { value: "6th", label: "6th" },
-                { value: "7th", label: "7th" },
-                { value: "8th", label: "8th" },
-                { value: "9th", label: "9th" },
-                { value: "10th", label: "10th" },
-                { value: "11th", label: "11th" },
-                { value: "12th", label: "12th" },
-              ]}
+              options={gradeOptions}
             ></Select>
             {errors.grade && (
               <p className="text-red-500">{errors.grade.message}</p>
@@ -161,30 +143,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
               defaultValue={data?.subject}
               className="w-full"
               onChange={(value) => setValue("subject", value)}
-              options={[
-                { value: "Mathematics", label: "Mathematics" },
-                { value: "English", label: "English" },
-                { value: "Literature", label: "Literature" },
-                { value: "History", label: "History" },
-                { value: "Geography", label: "Geography" },
-                { value: "Physics", label: "Physics" },
-                { value: "Chemistry", label: "Chemistry" },
-                { value: "Biology", label: "Biology" },
-                { value: "Art", label: "Art" },
-                { value: "Music", label: "Music" },
-                {
-                  value: "Information technology",
-                  label: "Information technology",
-                },
-                { value: "Physical education", label: "Physical education" },
-                { value: "Civic education", label: "Civic education" },
-                { value: "German", label: "German" },
-                { value: "Japanese", label: "Japanese" },
-                { value: "Chinese", label: "Chinese" },
-                { value: "Russian", label: "Russian" },
-                { value: "French", label: "French" },
-                { value: "Korean", label: "Korean" },
-              ]}
+              options={subjectOptions}
             ></Select>
             {errors.subject && (
               <p className="text-red-500">{errors.subject.message}</p>

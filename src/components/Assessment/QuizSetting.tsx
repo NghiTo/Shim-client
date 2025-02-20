@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { updateQuiz } from "../../apis/quiz.api";
 import { FaCamera } from "react-icons/fa6";
 import { checkImage, readAsBase64 } from "../../utils/checkImage";
+import { subjectOptions } from "../../constants/constants";
 
 interface QuizSettingProps {
   quiz: QuizResponse;
@@ -135,30 +136,7 @@ const QuizSetting: React.FC<QuizSettingProps> = ({
               defaultValue={quiz?.subject || "--"}
               className="w-full"
               onChange={(value) => setValue("subject", value)}
-              options={[
-                { value: "Mathematics", label: "Mathematics" },
-                { value: "English", label: "English" },
-                { value: "Literature", label: "Literature" },
-                { value: "History", label: "History" },
-                { value: "Geography", label: "Geography" },
-                { value: "Physics", label: "Physics" },
-                { value: "Chemistry", label: "Chemistry" },
-                { value: "Biology", label: "Biology" },
-                { value: "Art", label: "Art" },
-                { value: "Music", label: "Music" },
-                {
-                  value: "Information technology",
-                  label: "Information technology",
-                },
-                { value: "Physical education", label: "Physical education" },
-                { value: "Civic education", label: "Civic education" },
-                { value: "German", label: "German" },
-                { value: "Japanese", label: "Japanese" },
-                { value: "Chinese", label: "Chinese" },
-                { value: "Russian", label: "Russian" },
-                { value: "French", label: "French" },
-                { value: "Korean", label: "Korean" },
-              ]}
+              options={subjectOptions}
             ></Select>
             {errors.subject && (
               <span className="text-red-600 text-sm">
